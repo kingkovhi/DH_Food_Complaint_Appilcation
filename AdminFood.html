@@ -1,0 +1,525 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard | Campus Food Voice</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, 'Segoe UI', 'Inter', sans-serif;
+    }
+
+    body {
+      background: #F9F3E7; /* beige background */
+      padding: 2rem 1.5rem;
+      color: #2F3E46;
+    }
+
+    .admin-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* header */
+    .admin-header {
+      background: #D9EAF5; /* light blue */
+      border-radius: 2rem;
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      border: 1px solid rgba(255,255,255,0.6);
+    }
+
+    h1 {
+      font-size: 1.9rem;
+      color: #1F3B4C;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .logout-btn {
+      background: #F0E5D8;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 3rem;
+      font-weight: 600;
+      color: #5C3E1F;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .logout-btn:hover {
+      background: #E2D0BC;
+    }
+
+    /* stats cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1.2rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: #FEFBF5;
+      border-radius: 1.5rem;
+      padding: 1.2rem;
+      text-align: center;
+      border: 1px solid #EADBC6;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: #1A4A5F;
+    }
+
+    .stat-label {
+      color: #8B6F48;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* controls bar */
+    .controls {
+      background: #FEFBF5;
+      border-radius: 1.2rem;
+      padding: 1rem 1.5rem;
+      margin-bottom: 1.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      border: 1px solid #EADBC6;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .filter-group select, .filter-group input {
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      border: 1px solid #E2D4C2;
+      background: white;
+      font-size: 0.85rem;
+    }
+
+    .refresh-btn {
+      background: #D9EAF5;
+      border: none;
+      padding: 0.5rem 1.2rem;
+      border-radius: 2rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* table */
+    .table-wrapper {
+      background: #FEFBF5;
+      border-radius: 1.5rem;
+      border: 1px solid #EADBC6;
+      overflow-x: auto;
+      padding: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    th {
+      background: #E2F0F9;
+      padding: 1rem 0.8rem;
+      text-align: left;
+      color: #1A4A5F;
+      font-weight: 600;
+    }
+
+    td {
+      padding: 0.9rem 0.8rem;
+      border-bottom: 1px solid #EFE3D4;
+      vertical-align: middle;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    .badge-seen {
+      background: #CCE3DE;
+      color: #1F6E5C;
+    }
+
+    .badge-reviewed {
+      background: #DCD3E8;
+      color: #4C3A6B;
+    }
+
+    .badge-pending {
+      background: #F0E5D8;
+      color: #9A7B54;
+    }
+
+    .action-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .action-btn {
+      background: #E9E0D4;
+      border: none;
+      padding: 5px 12px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: 0.1s;
+    }
+
+    .action-btn.seen {
+      background: #D7E9E2;
+      color: #2D6A5C;
+    }
+    .action-btn.review {
+      background: #E2D9EF;
+      color: #4A3B6B;
+    }
+    .action-btn.delete {
+      background: #FADCD9;
+      color: #A33B2E;
+    }
+
+    .action-btn:hover {
+      filter: brightness(0.94);
+    }
+
+    .login-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .login-card {
+      background: #FEFBF5;
+      border-radius: 2rem;
+      padding: 2rem;
+      width: 320px;
+      text-align: center;
+      border: 1px solid #EADBC6;
+      box-shadow: 0 20px 30px -12px rgba(0,0,0,0.2);
+    }
+
+    .login-card input {
+      width: 100%;
+      margin: 1rem 0;
+      padding: 0.8rem;
+      border-radius: 2rem;
+      border: 1px solid #E2D4C2;
+    }
+
+    .login-card button {
+      background: #BED7E8;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 2rem;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.7rem;
+      color: #BB9A70;
+    }
+  </style>
+</head>
+<body>
+<div class="admin-container" id="adminApp">
+  <!-- content will be shown after login -->
+</div>
+
+<script>
+  // ---------- CONSTANTS & DATA ----------
+  const STORAGE_KEY = "campus_food_feedback";
+  const ADMIN_PASSWORD = "foodreview2025";  // staff password
+
+  let isAuthenticated = false;
+
+  // Helper functions (same as main app)
+  function loadSubmissions() {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      return JSON.parse(stored);
+    } else {
+      // fallback demo data (should be same as main app if accessed first)
+      const demo = [
+        { id: "DEMO-4F9A", type: "Complaint", title: "Cold french fries", description: "The fries at the main counter were cold.", timestamp: new Date(Date.now() - 86400000).toLocaleString(), isSeen: true, isReviewed: true },
+        { id: "DEMO-2C7B", type: "Compliment", title: "Great vegan options", description: "Loved the tofu bowl today!", timestamp: new Date(Date.now() - 172800000).toLocaleString(), isSeen: true, isReviewed: false },
+        { id: "DEMO-8E3D", type: "Concern", title: "Allergy labeling", description: "Please add clear allergen signs.", timestamp: new Date(Date.now() - 43200000).toLocaleString(), isSeen: false, isReviewed: false }
+      ];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(demo));
+      return demo;
+    }
+  }
+
+  function saveSubmissions(submissions) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(submissions));
+  }
+
+  function updateSubmission(id, updates) {
+    let subs = loadSubmissions();
+    const index = subs.findIndex(s => s.id === id);
+    if (index !== -1) {
+      subs[index] = { ...subs[index], ...updates };
+      saveSubmissions(subs);
+      return true;
+    }
+    return false;
+  }
+
+  function deleteSubmission(id) {
+    let subs = loadSubmissions();
+    const filtered = subs.filter(s => s.id !== id);
+    if (filtered.length !== subs.length) {
+      saveSubmissions(filtered);
+      return true;
+    }
+    return false;
+  }
+
+  // ---------- RENDER ADMIN DASHBOARD (full table) ----------
+  let currentFilter = "all";
+  let searchTerm = "";
+
+  function renderDashboard() {
+    let submissions = loadSubmissions();
+    // filter by type
+    if (currentFilter !== "all") {
+      submissions = submissions.filter(s => s.type === currentFilter);
+    }
+    // search in title/desc/id
+    if (searchTerm.trim() !== "") {
+      const term = searchTerm.trim().toLowerCase();
+      submissions = submissions.filter(s => 
+        s.title.toLowerCase().includes(term) || 
+        s.description.toLowerCase().includes(term) || 
+        s.id.toLowerCase().includes(term)
+      );
+    }
+    // sort by newest first
+    submissions.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+    // stats
+    const total = submissions.length;
+    const seenCount = submissions.filter(s => s.isSeen).length;
+    const reviewedCount = submissions.filter(s => s.isReviewed).length;
+    
+    const container = document.getElementById("adminApp");
+    if (!container) return;
+    
+    const statsHtml = `
+      <div class="stats-grid">
+        <div class="stat-card"><div class="stat-number">${total}</div><div class="stat-label">Total submissions</div></div>
+        <div class="stat-card"><div class="stat-number">${seenCount}</div><div class="stat-label">Seen by staff</div></div>
+        <div class="stat-card"><div class="stat-number">${reviewedCount}</div><div class="stat-label">Responded (reviewed)</div></div>
+        <div class="stat-card"><div class="stat-number">${total - reviewedCount}</div><div class="stat-label">Pending response</div></div>
+      </div>
+    `;
+
+    let tableRows = "";
+    if (submissions.length === 0) {
+      tableRows = `<tr><td colspan="7" style="text-align:center; padding:2rem;">📭 No submissions match the filters.</td></tr>`;
+    } else {
+      for (let sub of submissions) {
+        const seenBadge = sub.isSeen ? '<span class="badge badge-seen">✅ Seen</span>' : '<span class="badge badge-pending">⭕ Not seen</span>';
+        const reviewedBadge = sub.isReviewed ? '<span class="badge badge-reviewed">✅ Responded</span>' : '<span class="badge badge-pending">⏳ Pending</span>';
+        tableRows += `
+          <tr>
+            <td><code>${sub.id}</code></td>
+            <td>${sub.type}</td>
+            <td><strong>${escapeHtml(sub.title)}</strong></td>
+            <td>${escapeHtml(sub.description.length > 60 ? sub.description.slice(0,60)+'…' : sub.description)}</td>
+            <td style="font-size:0.75rem;">${sub.timestamp}</td>
+            <td>${seenBadge}</td>
+            <td>${reviewedBadge}</td>
+            <td class="action-group">
+              <button class="action-btn seen" data-id="${sub.id}" data-action="toggleSeen">${sub.isSeen ? '🙈 Unseen' : '👁️ Seen'}</button>
+              <button class="action-btn review" data-id="${sub.id}" data-action="toggleReviewed">${sub.isReviewed ? '📌 Not responded' : '✍️ Mark responded'}</button>
+              <button class="action-btn delete" data-id="${sub.id}" data-action="delete">🗑️ Delete</button>
+            </td>
+          </tr>
+        `;
+      }
+    }
+
+    const tableHtml = `
+      <div class="controls">
+        <div class="filter-group">
+          <span>🔍 Filter by type:</span>
+          <select id="typeFilter">
+            <option value="all" ${currentFilter === 'all' ? 'selected' : ''}>All</option>
+            <option value="Concern" ${currentFilter === 'Concern' ? 'selected' : ''}>Concerns</option>
+            <option value="Complaint" ${currentFilter === 'Complaint' ? 'selected' : ''}>Complaints</option>
+            <option value="Compliment" ${currentFilter === 'Compliment' ? 'selected' : ''}>Compliments</option>
+          </select>
+          <input type="text" id="searchInput" placeholder="🔎 Search by title, description or ID" value="${escapeHtml(searchTerm)}" style="width: 240px;">
+        </div>
+        <button class="refresh-btn" id="refreshBtn">⟳ Refresh</button>
+      </div>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>ID</th><th>Type</th><th>Title</th><th>Description</th><th>Submitted</th><th>Seen</th><th>Response</th><th>Actions</th></tr>
+          </thead>
+          <tbody>${tableRows}</tbody>
+        </table>
+      </div>
+    `;
+
+    container.innerHTML = `
+      <div class="admin-header">
+        <h1>🍽️ Staff Dashboard <span style="font-size:0.8rem;">Campus Food Voice</span></h1>
+        <button class="logout-btn" id="adminLogoutBtn">🔐 Logout</button>
+      </div>
+      ${statsHtml}
+      ${tableHtml}
+      <footer>⚡ Changes reflect instantly. "Responded" = reviewed = students see response status in Community Feed.</footer>
+    `;
+
+    // attach event listeners for dynamic buttons
+    document.querySelectorAll("[data-action]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        const id = btn.getAttribute("data-id");
+        const action = btn.getAttribute("data-action");
+        if (!id) return;
+        if (action === "toggleSeen") {
+          const sub = loadSubmissions().find(s => s.id === id);
+          if (sub) updateSubmission(id, { isSeen: !sub.isSeen });
+          renderDashboard();
+        } else if (action === "toggleReviewed") {
+          const sub = loadSubmissions().find(s => s.id === id);
+          if (sub) updateSubmission(id, { isReviewed: !sub.isReviewed });
+          renderDashboard();
+        } else if (action === "delete") {
+          if (confirm(`⚠️ Permanently delete submission ${id}? This cannot be undone.`)) {
+            deleteSubmission(id);
+            renderDashboard();
+          }
+        }
+      });
+    });
+
+    // filter & search listeners
+    const filterSelect = document.getElementById("typeFilter");
+    const searchInput = document.getElementById("searchInput");
+    const refreshBtn = document.getElementById("refreshBtn");
+    if (filterSelect) {
+      filterSelect.addEventListener("change", (e) => {
+        currentFilter = e.target.value;
+        renderDashboard();
+      });
+    }
+    if (searchInput) {
+      searchInput.addEventListener("input", (e) => {
+        searchTerm = e.target.value;
+        renderDashboard();
+      });
+    }
+    if (refreshBtn) {
+      refreshBtn.addEventListener("click", () => {
+        renderDashboard();
+      });
+    }
+    document.getElementById("adminLogoutBtn")?.addEventListener("click", () => {
+      isAuthenticated = false;
+      showLoginScreen();
+    });
+  }
+
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  // ---------- LOGIN SCREEN ----------
+  function showLoginScreen() {
+    const container = document.getElementById("adminApp");
+    if (!container) return;
+    container.innerHTML = `
+      <div class="login-overlay" id="loginOverlay" style="position:relative; background:transparent; backdrop-filter:none; display:flex;">
+        <div class="login-card">
+          <h2>🔐 Staff Access</h2>
+          <p style="margin:0.5rem 0; color:#7F6242;">Enter admin password</p>
+          <input type="password" id="adminPassword" placeholder="password" autofocus>
+          <button id="loginSubmitBtn">Login to Dashboard</button>
+          <div id="loginError" style="color:#B1624B; font-size:0.75rem; margin-top:0.8rem;"></div>
+        </div>
+      </div>
+    `;
+    const loginBtn = document.getElementById("loginSubmitBtn");
+    const pwdInput = document.getElementById("adminPassword");
+    const errorDiv = document.getElementById("loginError");
+    
+    const attemptLogin = () => {
+      const pwd = pwdInput.value;
+      if (pwd === ADMIN_PASSWORD) {
+        isAuthenticated = true;
+        renderDashboard();
+      } else {
+        errorDiv.innerText = "❌ Incorrect password. Access denied.";
+      }
+    };
+    
+    loginBtn.addEventListener("click", attemptLogin);
+    pwdInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") attemptLogin();
+    });
+  }
+
+  // initial check: if already authenticated, show dashboard, else login
+  function init() {
+    if (isAuthenticated) {
+      renderDashboard();
+    } else {
+      showLoginScreen();
+    }
+  }
+
+  init();
+</script>
+</body>
+</html>

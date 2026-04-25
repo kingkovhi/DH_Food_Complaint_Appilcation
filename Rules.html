@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Dining Hall Rules | Campus Food Guide</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, 'Segoe UI', 'Inter', 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      background-color: #F9F3E7;  /* soft beige base */
+      padding: 2rem 1.5rem;
+      color: #2F3E46;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+    }
+
+    /* header */
+    .hero {
+      background: #D9EAF5;  /* light blue */
+      border-radius: 2rem;
+      padding: 1.8rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      text-align: center;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #1F3B4C;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    h1 small {
+      font-size: 0.9rem;
+      font-weight: normal;
+      background: #F5E7D3;
+      padding: 4px 14px;
+      border-radius: 40px;
+      color: #8B5E3C;
+    }
+
+    .subhead {
+      color: #2C5A6E;
+      margin-top: 0.6rem;
+      font-weight: 450;
+      border-left: 3px solid #C49A6C;
+      padding-left: 1rem;
+      max-width: 600px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    /* card style */
+    .card {
+      background: #FEFBF5;
+      border-radius: 1.5rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.02);
+      overflow: hidden;
+      border: 1px solid #EADBC6;
+      margin-bottom: 2rem;
+    }
+
+    .card-header {
+      background: #E2F0F9;
+      padding: 1rem 1.8rem;
+      border-bottom: 1px solid #CDDDE9;
+    }
+
+    .card-header h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1A4A5F;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .card-body {
+      padding: 1.6rem 1.8rem;
+    }
+
+    /* tables and lists */
+    .hours-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .meal-card {
+      background: #FFFFFF;
+      border-radius: 1.2rem;
+      padding: 1rem;
+      border: 1px solid #F0E2D2;
+      text-align: center;
+    }
+
+    .meal-title {
+      font-weight: 700;
+      font-size: 1.2rem;
+      background: #E2F0F9;
+      display: inline-block;
+      padding: 4px 18px;
+      border-radius: 40px;
+      margin-bottom: 0.8rem;
+      color: #1A4A5F;
+    }
+
+    .time-slot {
+      font-size: 1rem;
+      margin: 0.5rem 0;
+    }
+
+    .badge-alert {
+      background: #FDECDC;
+      border-left: 4px solid #E2A76F;
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      margin: 1rem 0;
+      font-weight: 500;
+    }
+
+    .rule-list {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    .rule-list li {
+      margin-bottom: 0.7rem;
+      padding-left: 1.6rem;
+      position: relative;
+    }
+
+    .rule-list li::before {
+      content: "•";
+      color: #BD9A6B;
+      font-weight: bold;
+      font-size: 1.2rem;
+      position: absolute;
+      left: 0.2rem;
+    }
+
+    .allowance-box {
+      background: #FCF9F4;
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-top: 1rem;
+      border: 1px solid #EADBC6;
+    }
+
+    .allowance-title {
+      font-weight: 700;
+      color: #5D7B6E;
+      margin-bottom: 0.5rem;
+    }
+
+    .combo-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.8rem;
+      margin: 0.8rem 0;
+    }
+
+    .combo-tag {
+      background: #E9E0D4;
+      padding: 5px 12px;
+      border-radius: 30px;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    hr {
+      margin: 1rem 0;
+      border: 0;
+      height: 1px;
+      background: #EADBC6;
+    }
+
+    .mark-warning {
+      background-color: #FFE8D6;
+      padding: 0.2rem 0.4rem;
+      border-radius: 12px;
+      font-weight: 600;
+      color: #B45F2A;
+    }
+
+    .important-note {
+      background: #EFF7F2;
+      border-radius: 1rem;
+      padding: 1rem;
+      border-left: 5px solid #6F9E7C;
+      margin: 1rem 0;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      color: #B3936E;
+      font-size: 0.75rem;
+    }
+
+    @media (max-width: 700px) {
+      body { padding: 1rem; }
+      .card-body { padding: 1.2rem; }
+      .hero { padding: 1.2rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <h1>
+      🍽️ Dining Hall Rules 
+      <small>reminder & etiquette</small>
+    </h1>
+    <div class="subhead">Respect · Courtesy · Cleanliness · Fair share</div>
+  </div>
+
+  <!-- OPERATING HOURS SECTION -->
+  <div class="card">
+    <div class="card-header">
+      <h2>⏰ Meal Hours</h2>
+    </div>
+    <div class="card-body">
+      <div class="hours-grid">
+        <div class="meal-card">
+          <div class="meal-title">Monday – Friday</div>
+          <div class="time-slot">🍳 Breakfast: 07h00 – 08h15</div>
+          <div class="time-slot">🍽️ Lunch: 12h00 – 14h00</div>
+          <div class="time-slot">🌙 Supper: 17h00 – 18h30</div>
+        </div>
+        <div class="meal-card">
+          <div class="meal-title">Saturday, Sunday & Public Holidays</div>
+          <div class="time-slot">🍳 Breakfast: 08h00 – 09h15</div>
+          <div class="time-slot">🍽️ Lunch: 12h00 – 13h30</div>
+          <div class="time-slot">🌙 Supper: 17h00 – 18h30</div>
+        </div>
+      </div>
+      <div class="badge-alert">
+        ⏱️ <strong>Seconds</strong> will be available at <strong>the end of LUNCH and SUPPER ONLY</strong>.
+      </div>
+      <div class="badge-alert" style="background:#FBEFE3;">
+        🚪 <strong>Please VACATE</strong> the Dining Hall within <strong>15 minutes</strong> of meal closing time to allow staff to clean and prepare for the next meal.
+      </div>
+    </div>
+  </div>
+
+  <!-- GENERAL RULES -->
+  <div class="card">
+    <div class="card-header">
+      <h2>📋 General Dining Hall Rules</h2>
+    </div>
+    <div class="card-body">
+      <ul class="rule-list">
+        <li>Crockery, cutlery, and glasses <strong>MAY NOT</strong> be removed from the Dining Hall.</li>
+        <li>Students <strong>MAY NOT</strong> take food out of the Dining Hall except: <strong>own portion of fruit of the day</strong> and <strong>two slices of bread</strong> (from the four slices allowed) at the supper meal.</li>
+        <li>No meals will be served in residence rooms without permission from a Warden (only for sick/injured students on temporary basis). If too ill to eat in Dining Hall, report to Health Care Centre.</li>
+        <li><strong>NO ONE</strong> is permitted to remove food from the Dining Hall on plates or any type of container.</li>
+        <li>Students are expected to treat the dining hall facilities and staff with <strong>respect</strong>.</li>
+        <li><strong>NOT allowed in the kitchen</strong> unless accompanied by a catering staff member (applies to area behind servery as well). Complaints about food must be reported immediately to server duty or caterer on duty.</li>
+        <li>No bare feet in the dining hall (safety reason – glass breakages).</li>
+        <li><strong>Possession and/or consumption of liquor is STRICTLY PROHIBITED</strong>, except at formal dinners. Entering under influence of alcohol is strictly prohibited.</li>
+        <li>Courtesy towards dining hall staff and fellow students is expected at all times.</li>
+        <li>Smoking is <strong>NOT permitted</strong> within the precinct of the dining hall.</li>
+        <li>You may not share your meal with anyone who does not have a meal booked. Without an extra meal booking, you are <strong>NOT entitled to any salads, juice or bread.</strong></li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ALLOWANCES BREAKFAST / LUNCH / SUPPER -->
+  <div class="card">
+    <div class="card-header">
+      <h2>🍽️ Meal Allowances (per person)</h2>
+    </div>
+    <div class="card-body">
+      <div class="hours-grid" style="margin-bottom: 1rem;">
+        <div class="allowance-box">
+          <div class="allowance-title">🌅 Breakfast Allowance</div>
+          <ul class="rule-list" style="margin-top: 0.4rem;">
+            <li>2 glasses of juice <strong>OR</strong> 1 glass of milk <strong>OR</strong> 1 fruit juice <strong>OR</strong> 2 fruit only (no juice)</li>
+            <li>🍞 4 slices of bread</li>
+            <li>🧻 2 serviettes</li>
+          </ul>
+        </div>
+        <div class="allowance-box">
+          <div class="allowance-title">☀️ Lunch Allowance</div>
+          <ul class="rule-list" style="margin-top: 0.4rem;">
+            <li>2 glasses of juice <strong>OR</strong> 1 fruit and 1 juice <strong>OR</strong> 2 fruit (no juice)</li>
+            <li>🍞 4 slices of bread</li>
+            <li>🧻 2 serviettes</li>
+          </ul>
+        </div>
+        <div class="allowance-box">
+          <div class="allowance-title">🌙 Supper Allowance</div>
+          <ul class="rule-list" style="margin-top: 0.4rem;">
+            <li>2 glasses of juice <strong>OR</strong> 1 fruit and 1 pudding <strong>OR</strong> 1 fruit and 1 juice <strong>OR</strong> 2 fruit (no juice)</li>
+            <li>🍞 4 slices of bread</li>
+            <li>🧻 2 serviettes</li>
+          </ul>
+        </div>
+      </div>
+      <div class="important-note">
+        🥛 <strong>PLEASE DON'T DRINK THE MILK</strong> – The milk provided is for tea and coffee only.
+      </div>
+    </div>
+  </div>
+
+  <!-- JUICE, FRUIT & DESSERT ALLOWANCE (special combinations) -->
+  <div class="card">
+    <div class="card-header">
+      <h2>🍊 Juice, Fruit & Dessert Combinations</h2>
+    </div>
+    <div class="card-body">
+      <p style="margin-bottom: 1rem;">Choose <strong>ONE</strong> of the following options per meal (where dessert is available):</p>
+      <div class="combo-list">
+        <span class="combo-tag">1 Juice + 1 Fruit</span>
+        <span class="combo-tag">2 Juice + No Fruit</span>
+        <span class="combo-tag">2 Fruit + No Juice</span>
+        <span class="combo-tag">1 Juice + 1 Dessert</span>
+        <span class="combo-tag">2 Juice + No Dessert</span>
+      </div>
+      <div class="badge-alert" style="background:#FDECDC; margin-top: 1rem;">
+        ❗ <strong class="mark-warning">2 DESSERTS ARE NOT PERMITTED!</strong> — Strictly one dessert maximum per meal.
+      </div>
+    </div>
+  </div>
+
+  <!-- SHARING MEALS & DISCIPLINARY ACTIONS -->
+  <div class="card">
+    <div class="card-header">
+      <h2>⚠️ Sharing Meals & Disciplinary Actions</h2>
+    </div>
+    <div class="card-body">
+      <ul class="rule-list">
+        <li>If you have <strong>no meal booked</strong>, you <strong>MAY NOT take seconds</strong>. You also <strong>MAY NOT take someone else's seconds</strong>.</li>
+        <li>Taking seconds without a meal booking will lead to <strong>disciplinary action</strong>.</li>
+      </ul>
+      <hr>
+      <h3 style="font-size: 1.1rem; margin-bottom: 0.6rem;">🍞 Removal of Food from Dining Hall (Supper only)</h3>
+      <ul class="rule-list">
+        <li><strong>4 slices of bread + 1 fruit</strong> maximum (NO MORE than 4 slices of bread).</li>
+        <li>If caught taking more than 4 slices of bread → <strong>disciplinary action</strong>.</li>
+        <li>Condiments, cutlery, and crockery <strong>may not be removed</strong> from the dining hall.</li>
+        <li>Valid meal bookings are essential to enter the dining hall at mealtimes.</li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- ETIQUETTE & COURTESY -->
+  <div class="card">
+    <div class="card-header">
+      <h2>🧂 General Dining Hall Etiquette</h2>
+    </div>
+    <div class="card-body">
+      <ul class="rule-list">
+        <li>Treat catering staff with courtesy and respect — they work hard to serve you.</li>
+        <li>Clean up after yourself: return used crockery and cutlery to designated areas.</li>
+        <li>Avoid wasting food — only take what you will eat.</li>
+        <li>Keep noise levels reasonable so everyone can enjoy their meal.</li>
+        <li>If you have a complaint or concern, report it immediately to the caterer on duty (not later on social media).</li>
+        <li>Line up orderly and wait for your turn.</li>
+      </ul>
+      <div class="important-note" style="margin-top: 1rem;">
+        💡 <strong>Remember:</strong> The dining hall is a shared space. Your cooperation ensures a pleasant environment for everyone.
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    📋 Campus Food Services — Rules subject to update. Please adhere to all guidelines to maintain a respectful dining community.
+  </footer>
+</div>
+</body>
+</html>

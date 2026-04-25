@@ -1,0 +1,865 @@
+Here is a complete, ready-to-run HTML document that creates a food feedback app where students can anonymously submit concerns, complaints, or compliments and track if their submission has been seen or reviewed.
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Campus Food Voice | Anonymous Feedback & Community Feed</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, 'Segoe UI', 'Inter', 'Helvetica Neue', sans-serif;
+    }
+
+    body {
+      background-color: #F9F3E7;  /* soft beige base */
+      padding: 2rem 1.5rem;
+      color: #2F3E46;
+    }
+
+    .app-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* header */
+    .hero {
+      background: #D9EAF5;  /* light blue */
+      border-radius: 2rem;
+      padding: 1.5rem 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      font-weight: 600;
+      letter-spacing: -0.3px;
+      color: #1F3B4C;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    h1 small {
+      font-size: 0.9rem;
+      font-weight: normal;
+      background: #F5E7D3;
+      padding: 4px 12px;
+      border-radius: 40px;
+      color: #8B5E3C;
+    }
+
+    .subhead {
+      color: #2C5A6E;
+      margin-top: 0.5rem;
+      font-weight: 450;
+      border-left: 3px solid #C49A6C;
+      padding-left: 1rem;
+    }
+
+    /* tab navigation */
+    .tab-bar {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 2rem;
+      border-bottom: 2px solid #E5D5C0;
+      padding-bottom: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 0.6rem 1.4rem;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 40px;
+      cursor: pointer;
+      transition: all 0.2s;
+      color: #6B5A48;
+    }
+
+    .tab-btn.active {
+      background: #D9EAF5;
+      color: #1A4A5F;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+    }
+
+    .tab-btn:not(.active):hover {
+      background: #F0E5DA;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fade 0.2s ease;
+    }
+
+    .tab-content.active-tab {
+      display: block;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(5px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    /* cards */
+    .card {
+      background: #FEFBF5;
+      border-radius: 1.5rem;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.02);
+      overflow: hidden;
+      border: 1px solid #EADBC6;
+    }
+
+    .card-header {
+      background: #E2F0F9;
+      padding: 1.2rem 1.8rem;
+      border-bottom: 1px solid #CDDDE9;
+    }
+
+    .card-header h2 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #1A4A5F;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-body {
+      padding: 1.8rem;
+    }
+
+    /* form elements */
+    .form-group {
+      margin-bottom: 1.4rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+      color: #3D5A6C;
+      font-size: 0.9rem;
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      border-radius: 1rem;
+      border: 1px solid #E2D4C2;
+      background: #FFFFFF;
+      font-size: 0.95rem;
+      transition: 0.2s;
+    }
+
+    select:focus, input:focus, textarea:focus {
+      outline: none;
+      border-color: #87B9D4;
+      box-shadow: 0 0 0 3px rgba(135, 185, 212, 0.2);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 100px;
+    }
+
+    .btn {
+      background: #C9E0EC;
+      border: none;
+      padding: 0.8rem 1.6rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #1A4A5F;
+      cursor: pointer;
+      transition: 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    }
+
+    .btn-primary {
+      background: #BED7E8;
+      color: #134352;
+      border: 1px solid #A9C6DA;
+    }
+
+    .btn-primary:hover {
+      background: #A8C9DF;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #C5B59B;
+      color: #6C4E2E;
+    }
+
+    .btn-outline:hover {
+      background: #F3EDE4;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      background: #F0E5D8;
+      color: #7A5A3A;
+    }
+
+    .badge-seen {
+      background: #CCE3DE;
+      color: #1F6E5C;
+    }
+
+    .badge-reviewed {
+      background: #DCD3E8;
+      color: #4C3A6B;
+    }
+
+    .status-result {
+      background: #FEF6EC;
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-top: 1.2rem;
+      border-left: 4px solid #BED7E8;
+    }
+
+    hr {
+      margin: 1rem 0;
+      border: 0;
+      height: 1px;
+      background: #EADBC6;
+    }
+
+    /* community feed list */
+    .feed-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .feed-item {
+      background: #FFFFFF;
+      border-radius: 1.2rem;
+      padding: 1rem 1.4rem;
+      border: 1px solid #EEE2D4;
+      transition: 0.1s;
+    }
+
+    .feed-header {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.6rem;
+      gap: 8px;
+    }
+
+    .feed-type {
+      font-weight: 700;
+      font-size: 0.8rem;
+      padding: 4px 10px;
+      border-radius: 30px;
+      background: #E9DFD1;
+      color: #735F48;
+    }
+
+    .feed-date {
+      font-size: 0.7rem;
+      color: #9C855E;
+    }
+
+    .feed-title {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #2A4B5E;
+      margin: 0.2rem 0;
+    }
+
+    .feed-desc {
+      color: #4F5E67;
+      font-size: 0.9rem;
+      margin: 0.5rem 0;
+      line-height: 1.4;
+    }
+
+    .response-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      margin-top: 8px;
+      font-size: 0.75rem;
+      font-weight: 500;
+    }
+
+    .response-badge {
+      background: #E9F1EC;
+      border-radius: 20px;
+      padding: 3px 10px;
+    }
+
+    /* admin section */
+    .admin-section {
+      margin-top: 2rem;
+      border-radius: 1.5rem;
+      background: #FEFBF5;
+      border: 1px solid #EADBC6;
+      overflow: hidden;
+    }
+
+    .admin-toggle {
+      background: #E2F0F9;
+      padding: 1rem 1.8rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .admin-panel {
+      padding: 1.5rem;
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 8px;
+      border-bottom: 1px solid #EFE3D4;
+      vertical-align: middle;
+    }
+
+    th {
+      background: #F6EFE6;
+      color: #4A3B2C;
+      font-weight: 600;
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .small-btn {
+      background: #E9E0D4;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .small-btn.danger {
+      background: #FADCD9;
+      color: #A33B2E;
+    }
+
+    .small-btn.success {
+      background: #D7E9E2;
+      color: #2D6A5C;
+    }
+
+    .alert {
+      background: #FBEFE3;
+      border-radius: 1rem;
+      padding: 0.8rem;
+      margin-bottom: 1rem;
+      color: #9C6E42;
+      font-size: 0.85rem;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      color: #B3936E;
+      font-size: 0.75rem;
+    }
+
+    @media (max-width: 800px) {
+      body { padding: 1rem; }
+      .card-header h2 { font-size: 1.3rem; }
+      .tab-btn { padding: 0.4rem 1rem; }
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <div class="hero">
+    <h1>
+      🍽️ Food Complaints 
+      <small>anonymous · honest · safe</small>
+    </h1>
+    <div class="subhead">Submit concerns, complaints, or compliments — track status & see community feedback.</div>
+  </div>
+
+  <!-- TAB NAVIGATION -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="submitTab">📝 Submit Feedback</button>
+    <button class="tab-btn" data-tab="communityTab">👥 Community Feed</button>
+    <button class="tab-btn" data-tab="trackTab">🔍 Track My Submission</button>
+  </div>
+
+  <!-- TAB 1: SUBMIT FEEDBACK -->
+  <div id="submitTab" class="tab-content active-tab">
+    <div class="card">
+      <div class="card-header">
+        <h2>📝 Share your feedback</h2>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label>Feedback type *</label>
+          <select id="feedbackType">
+            <option value="Concern">⚠️ Concern</option>
+            <option value="Complaint">😤 Complaint</option>
+            <option value="Compliment">🌟 Compliment</option>
+            <option value="Compliment">🌟 Suggestion</option>
+            <option value="Compliment">🌟 Report</option>
+
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Title (optional)</label>
+          <input type="text" id="titleInput" placeholder="e.g., Salad freshness, Great service...">
+        </div>
+        <div class="form-group">
+          <label>Description *</label>
+          <textarea id="descInput" placeholder="Tell us more... (min 5 chars)" required></textarea>
+        </div>
+        <button class="btn btn-primary" id="submitFeedbackBtn">✍️ Submit anonymously →</button>
+        <div id="submitResultMsg" class="alert" style="display: none; margin-top: 1rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 2: COMMUNITY FEED (all submissions, responded status) -->
+  <div id="communityTab" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <h2>👥 All Student Feedback <span style="font-size:0.8rem;">(anonymous, latest first)</span></h2>
+      </div>
+      <div class="card-body">
+        <div id="communityFeedContainer" class="feed-list">
+          <!-- dynamic content -->
+          <div class="alert">Loading community feedback...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TAB 3: TRACK SUBMISSION -->
+  <div id="trackTab" class="tab-content">
+    <div class="card">
+      <div class="card-header">
+        <h2>🔍 Check your submission status</h2>
+      </div>
+      <div class="card-body">
+        <div class="form-group">
+          <label>Your unique Submission ID</label>
+          <input type="text" id="trackingIdInput" placeholder="Paste the ID you received">
+        </div>
+        <button class="btn btn-outline" id="checkStatusBtn">📋 Check status</button>
+        <div id="statusDisplayArea" class="status-result" style="display: none;"></div>
+        <div id="statusError" style="color:#B1624B; font-size:0.8rem; margin-top: 0.8rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ADMIN SECTION (staff only) -->
+  <div class="admin-section" id="adminSection">
+    <div class="admin-toggle">
+      <span style="font-weight: 600;">🛡️ Staff Dashboard (mark as seen/reviewed)</span>
+      <div>
+        <button id="showAdminLoginBtn" class="small-btn">🔐 Admin Login</button>
+        <button id="logoutAdminBtn" class="small-btn" style="display: none;">🚪 Logout</button>
+      </div>
+    </div>
+    <div id="adminPanelContent" style="display: none;" class="admin-panel">
+      <div id="adminTableContainer"></div>
+      <div class="alert" style="margin-top: 1rem; font-size: 0.75rem;">
+        ⚡ Staff: Use "Seen" / "Unseen" and "Reviewed" / "Not reviewed". "Reviewed" = responded. Delete submissions if needed.
+      </div>
+    </div>
+  </div>
+  <footer>🍃 All submissions are anonymous. "Responded" means staff marked as reviewed. Check feed for community updates.</footer>
+</div>
+
+<script>
+  // ---------- DATA STORAGE ----------
+  const STORAGE_KEY = "campus_food_feedback";
+  
+  function loadSubmissions() {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) {
+      return JSON.parse(stored);
+    } else {
+      const demoData = [
+        {
+          id: "DEMO-4F9A",
+          type: "Complaint",
+          title: "Cold french fries",
+          description: "The fries at the main counter were cold and soggy at lunch.",
+          timestamp: new Date(Date.now() - 86400000).toLocaleString(),
+          isSeen: true,
+          isReviewed: true
+        },
+        {
+          id: "DEMO-2C7B",
+          type: "Compliment",
+          title: "Great vegan options",
+          description: "Loved the tofu bowl today! Keep it up 🙌",
+          timestamp: new Date(Date.now() - 172800000).toLocaleString(),
+          isSeen: true,
+          isReviewed: false
+        },
+        {
+          id: "DEMO-8E3D",
+          type: "Concern",
+          title: "Allergy labeling",
+          description: "Please add clear allergen signs near desserts.",
+          timestamp: new Date(Date.now() - 43200000).toLocaleString(),
+          isSeen: false,
+          isReviewed: false
+        },
+        {
+          id: "DEMO-1A5F",
+          type: "Complaint",
+          title: "Long queues",
+          description: "The lunch line took 30 minutes, too crowded.",
+          timestamp: new Date(Date.now() - 7200000).toLocaleString(),
+          isSeen: true,
+          isReviewed: true
+        }
+      ];
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(demoData));
+      return demoData;
+    }
+  }
+
+  function saveSubmissions(submissions) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(submissions));
+  }
+
+  function generateShortId() {
+    return 'FB' + Math.random().toString(36).substring(2, 8).toUpperCase();
+  }
+
+  function addNewSubmission(type, title, description) {
+    const submissions = loadSubmissions();
+    const newId = generateShortId();
+    const newEntry = {
+      id: newId,
+      type: type,
+      title: title.trim() || "(no title)",
+      description: description.trim(),
+      timestamp: new Date().toLocaleString(),
+      isSeen: false,
+      isReviewed: false
+    };
+    submissions.unshift(newEntry);
+    saveSubmissions(submissions);
+    return newId;
+  }
+
+  function updateSubmission(submissionId, updates) {
+    const submissions = loadSubmissions();
+    const index = submissions.findIndex(s => s.id === submissionId);
+    if (index !== -1) {
+      submissions[index] = { ...submissions[index], ...updates };
+      saveSubmissions(submissions);
+      return true;
+    }
+    return false;
+  }
+
+  function deleteSubmission(submissionId) {
+    let subs = loadSubmissions();
+    const filtered = subs.filter(s => s.id !== submissionId);
+    if (filtered.length !== subs.length) {
+      saveSubmissions(filtered);
+      return true;
+    }
+    return false;
+  }
+
+  function getSubmissionById(id) {
+    const subs = loadSubmissions();
+    return subs.find(s => s.id === id) || null;
+  }
+
+  // ---------- RENDER COMMUNITY FEED (sorted by date desc, show responded = reviewed) ----------
+  function renderCommunityFeed() {
+    const container = document.getElementById("communityFeedContainer");
+    if (!container) return;
+    let submissions = loadSubmissions();
+    // sort by timestamp descending (newest first)
+    submissions.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+    
+    if (submissions.length === 0) {
+      container.innerHTML = `<div class="alert">📭 No feedback yet. Be the first to share!</div>`;
+      return;
+    }
+    
+    let html = '';
+    for (let sub of submissions) {
+      const responded = sub.isReviewed ? "✅ Responded" : "⏳ Pending response";
+      const respondedClass = sub.isReviewed ? "badge-reviewed" : "";
+      const typeColor = sub.type === 'Complaint' ? '😤' : (sub.type === 'Concern' ? '⚠️' : '🌟');
+      html += `
+        <div class="feed-item">
+          <div class="feed-header">
+            <span class="feed-type">${typeColor} ${sub.type}</span>
+            <span class="feed-date">📅 ${sub.timestamp}</span>
+          </div>
+          <div class="feed-title">${escapeHtml(sub.title)}</div>
+          <div class="feed-desc">${escapeHtml(sub.description.length > 120 ? sub.description.slice(0,120)+'…' : sub.description)}</div>
+          <div class="response-indicator">
+            <span class="response-badge ${respondedClass}">${responded}</span>
+            ${sub.isSeen ? '<span class="response-badge">👀 Seen by staff</span>' : '<span class="response-badge">👁️ Not yet seen</span>'}
+          </div>
+        </div>
+      `;
+    }
+    container.innerHTML = html;
+  }
+
+  // ---------- ADMIN TABLE (full CRUD) ----------
+  let currentAdminAuthenticated = false;
+
+  function renderAdminTable() {
+    const container = document.getElementById("adminTableContainer");
+    if (!container) return;
+    const submissions = loadSubmissions();
+    if (!submissions.length) {
+      container.innerHTML = `<div class="alert">📭 No submissions yet.</div>`;
+      return;
+    }
+    
+    let html = `<div style="overflow-x: auto;"><table><thead><tr>
+      <th>ID</th><th>Type</th><th>Title</th><th>Desc</th><th>Date</th><th>Seen</th><th>Reviewed (Responded)</th><th>Actions</th>
+    </tr></thead><tbody>`;
+    
+    submissions.forEach(sub => {
+      const shortDesc = sub.description.length > 40 ? sub.description.slice(0,37)+"…" : sub.description;
+      html += `<tr>
+        <td style="font-family:monospace;">${sub.id}</td>
+        <td>${sub.type}</td>
+        <td><strong>${escapeHtml(sub.title)}</strong></td>
+        <td>${escapeHtml(shortDesc)}</td>
+        <td style="font-size:0.75rem;">${sub.timestamp}</td>
+        <td><span class="status-badge ${sub.isSeen ? 'badge-seen' : ''}">${sub.isSeen ? '✅ Seen' : '⭕ No'}</span></td>
+        <td><span class="status-badge ${sub.isReviewed ? 'badge-reviewed' : ''}">${sub.isReviewed ? '✅ Reviewed' : '⭕ Pending'}</span></td>
+        <td class="action-buttons">
+          <button class="small-btn success" data-action="setSeen" data-id="${sub.id}">👁️ Seen</button>
+          <button class="small-btn" data-action="setUnseen" data-id="${sub.id}">🙈 Unseen</button>
+          <button class="small-btn success" data-action="setReviewed" data-id="${sub.id}">✍️ Reviewed</button>
+          <button class="small-btn" data-action="setUnreviewed" data-id="${sub.id}">📌 Not reviewed</button>
+          <button class="small-btn danger" data-action="delete" data-id="${sub.id}">🗑️ Delete</button>
+        </td>
+      </tr>`;
+    });
+    html += `</tbody></table></div>`;
+    container.innerHTML = html;
+    
+    container.querySelectorAll("button[data-action]").forEach(btn => {
+      btn.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const action = btn.getAttribute("data-action");
+        const id = btn.getAttribute("data-id");
+        if (!id) return;
+        if (action === "setSeen") {
+          updateSubmission(id, { isSeen: true });
+          renderAdminTable();
+          renderCommunityFeed(); // update feed as well
+        } else if (action === "setUnseen") {
+          updateSubmission(id, { isSeen: false });
+          renderAdminTable();
+          renderCommunityFeed();
+        } else if (action === "setReviewed") {
+          updateSubmission(id, { isReviewed: true });
+          renderAdminTable();
+          renderCommunityFeed();
+        } else if (action === "setUnreviewed") {
+          updateSubmission(id, { isReviewed: false });
+          renderAdminTable();
+          renderCommunityFeed();
+        } else if (action === "delete") {
+          if (confirm("Delete this submission permanently?")) {
+            deleteSubmission(id);
+            renderAdminTable();
+            renderCommunityFeed();
+          }
+        }
+      });
+    });
+  }
+
+  // helper
+  function escapeHtml(str) {
+    if (!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+      if (m === '&') return '&amp;';
+      if (m === '<') return '&lt;';
+      if (m === '>') return '&gt;';
+      return m;
+    });
+  }
+
+  // status check for student
+  function displayStatusById(submissionId) {
+    const sub = getSubmissionById(submissionId);
+    const statusDiv = document.getElementById("statusDisplayArea");
+    const errorDiv = document.getElementById("statusError");
+    if (!sub) {
+      statusDiv.style.display = "none";
+      errorDiv.innerText = "❌ Submission not found. Please double-check your ID.";
+      return;
+    }
+    errorDiv.innerText = "";
+    const seenText = sub.isSeen ? "✅ Yes, staff has seen this" : "⏳ Not yet seen by staff";
+    const reviewedText = sub.isReviewed ? "✅ Yes, responded (reviewed) ✔️" : "⏳ Pending staff response";
+    const statusHtml = `
+      <div style="display:flex; flex-direction:column; gap:8px;">
+        <div><span style="font-weight:600;">📌 ID:</span> <span class="highlight" style="background:#F0E5D8; padding:2px 8px; border-radius:40px;">${sub.id}</span></div>
+        <div><span style="font-weight:600;">📋 Type:</span> ${sub.type}</div>
+        <div><span style="font-weight:600;">📝 Title:</span> ${escapeHtml(sub.title)}</div>
+        <div><span style="font-weight:600;">💬 Description:</span> ${escapeHtml(sub.description)}</div>
+        <div><span style="font-weight:600;">🕒 Submitted:</span> ${sub.timestamp}</div>
+        <hr>
+        <div><span style="font-weight:600;">👀 Seen status:</span> ${seenText}</div>
+        <div><span style="font-weight:600;">📋 Response status:</span> ${reviewedText}</div>
+        <div style="background:#F2E8DC; border-radius:12px; padding:8px;">📢 "Responded" means staff has reviewed and taken action. Check Community Feed to see all updates.</div>
+      </div>
+    `;
+    statusDiv.innerHTML = statusHtml;
+    statusDiv.style.display = "block";
+  }
+
+  // submit new feedback
+  function handleSubmit() {
+    const type = document.getElementById("feedbackType").value;
+    const title = document.getElementById("titleInput").value;
+    const description = document.getElementById("descInput").value.trim();
+    const resultMsgDiv = document.getElementById("submitResultMsg");
+    
+    if (!description || description.length < 3) {
+      resultMsgDiv.style.display = "block";
+      resultMsgDiv.innerHTML = "⚠️ Please write a description (at least 3 characters).";
+      resultMsgDiv.style.background = "#FDEFE6";
+      return;
+    }
+    
+    const newId = addNewSubmission(type, title, description);
+    document.getElementById("titleInput").value = "";
+    document.getElementById("descInput").value = "";
+    resultMsgDiv.style.display = "block";
+    resultMsgDiv.innerHTML = `✅ Submitted anonymously! Your unique ID: <strong style="background:#EADBC6; padding:2px 8px; border-radius:40px;">${newId}</strong><br>📌 Save this ID to check status & see your post in Community Feed.`;
+    resultMsgDiv.style.background = "#E8F0EA";
+    
+    if (currentAdminAuthenticated && document.getElementById("adminPanelContent").style.display === "block") {
+      renderAdminTable();
+    }
+    renderCommunityFeed(); // update feed immediately
+    
+    setTimeout(() => {
+      resultMsgDiv.style.display = "none";
+    }, 5000);
+  }
+
+  // ---------- ADMIN AUTH ----------
+  const ADMIN_PASSWORD = "foodreview2025";
+  function showAdminLogin() {
+    const pwd = prompt("🔐 Staff access required. Enter admin password:");
+    if (pwd === ADMIN_PASSWORD) {
+      currentAdminAuthenticated = true;
+      document.getElementById("adminPanelContent").style.display = "block";
+      document.getElementById("showAdminLoginBtn").style.display = "none";
+      document.getElementById("logoutAdminBtn").style.display = "inline-block";
+      renderAdminTable();
+    } else if (pwd !== null) alert("Invalid password.");
+  }
+  function logoutAdmin() {
+    currentAdminAuthenticated = false;
+    document.getElementById("adminPanelContent").style.display = "none";
+    document.getElementById("showAdminLoginBtn").style.display = "inline-block";
+    document.getElementById("logoutAdminBtn").style.display = "none";
+  }
+
+  // ---------- TAB SWITCHING ----------
+  function initTabs() {
+    const tabs = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
+    tabs.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.getAttribute('data-tab');
+        contents.forEach(content => content.classList.remove('active-tab'));
+        document.getElementById(tabId).classList.add('active-tab');
+        tabs.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        // refresh feed when community tab is opened (just in case)
+        if (tabId === 'communityTab') renderCommunityFeed();
+        if (tabId === 'trackTab') {
+          // clear error maybe
+          document.getElementById("statusError").innerText = "";
+        }
+      });
+    });
+  }
+
+  // ---------- ON LOAD ----------
+  document.addEventListener("DOMContentLoaded", () => {
+    loadSubmissions(); // ensure data exists
+    initTabs();
+    renderCommunityFeed(); // initial load
+    
+    // submit button
+    document.getElementById("submitFeedbackBtn").addEventListener("click", handleSubmit);
+    // track button
+    const checkBtn = document.getElementById("checkStatusBtn");
+    const trackingInput = document.getElementById("trackingIdInput");
+    checkBtn.addEventListener("click", () => {
+      const id = trackingInput.value.trim();
+      if (!id) {
+        document.getElementById("statusError").innerText = "Please enter a submission ID.";
+        document.getElementById("statusDisplayArea").style.display = "none";
+        return;
+      }
+      displayStatusById(id);
+    });
+    
+    // admin
+    document.getElementById("showAdminLoginBtn").addEventListener("click", showAdminLogin);
+    document.getElementById("logoutAdminBtn").addEventListener("click", logoutAdmin);
+    
+    if (!currentAdminAuthenticated) {
+      document.getElementById("adminPanelContent").style.display = "none";
+      document.getElementById("logoutAdminBtn").style.display = "none";
+    } else {
+      document.getElementById("adminPanelContent").style.display = "block";
+      document.getElementById("showAdminLoginBtn").style.display = "none";
+      document.getElementById("logoutAdminBtn").style.display = "inline-block";
+      renderAdminTable();
+    }
+  });
+</script>
+</body>
+</html>
