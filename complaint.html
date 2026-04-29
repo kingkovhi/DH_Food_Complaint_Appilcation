@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Food Complaint Hub | Campus Voice</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, 'Segoe UI', 'Inter', sans-serif;
+    }
+
+    body {
+      background: #F9F3E7;
+      padding: 1.5rem;
+      color: #2F3E46;
+    }
+
+    .app-container {
+      max-width: 1300px;
+      margin: 0 auto;
+    }
+
+    /* header */
+    .top-bar {
+      background: #D9EAF5;
+      border-radius: 1.8rem;
+      padding: 1rem 1.8rem;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 2rem;
+      gap: 1rem;
+    }
+
+    .logo-area h2 {
+      color: #1F3B4C;
+      font-size: 1.5rem;
+    }
+
+    .home-link {
+      background: #F0E5D8;
+      padding: 0.5rem 1.2rem;
+      border-radius: 3rem;
+      text-decoration: none;
+      color: #4F3A25;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .home-link:hover {
+      background: #E2D0BC;
+    }
+
+    /* tabs */
+    .tab-bar {
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.8rem;
+      border-bottom: 2px solid #E5D5C0;
+      padding-bottom: 0.5rem;
+    }
+
+    .tab-btn {
+      background: transparent;
+      border: none;
+      padding: 0.5rem 1.3rem;
+      font-weight: 600;
+      border-radius: 3rem;
+      cursor: pointer;
+      color: #6B5A48;
+      transition: 0.2s;
+    }
+
+    .tab-btn.active {
+      background: #D9EAF5;
+      color: #1A4A5F;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fade 0.2s ease;
+    }
+
+    .active-tab {
+      display: block;
+    }
+
+    @keyframes fade {
+      from { opacity: 0; transform: translateY(6px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+
+    /* cards */
+    .card {
+      background: #FEFBF5;
+      border-radius: 1.5rem;
+      border: 1px solid #EADBC6;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.02);
+    }
+
+    .card-header {
+      background: #E2F0F9;
+      padding: 1rem 1.5rem;
+      border-bottom: 1px solid #CDDDE9;
+    }
+
+    .card-header h3 {
+      color: #1A4A5F;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1.2rem;
+    }
+
+    label {
+      font-weight: 600;
+      font-size: 0.85rem;
+      display: block;
+      margin-bottom: 0.3rem;
+      color: #4C6A7A;
+    }
+
+    select, input, textarea {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      border-radius: 1rem;
+      border: 1px solid #E2D4C2;
+      background: white;
+      font-size: 0.9rem;
+    }
+
+    .btn {
+      background: #C9E0EC;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .btn-primary {
+      background: #BED7E8;
+    }
+
+    .btn-primary:hover {
+      background: #A8C9DF;
+      transform: translateY(-1px);
+    }
+
+    .feed-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .feed-item {
+      background: white;
+      border-radius: 1rem;
+      padding: 1rem;
+      border: 1px solid #EEE2D4;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      background: #F0E5D8;
+    }
+
+    .response-badge {
+      font-size: 0.7rem;
+      margin-top: 0.5rem;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .alert {
+      background: #FBEFE3;
+      padding: 0.8rem;
+      border-radius: 1rem;
+      margin-top: 1rem;
+    }
+
+    .small-btn {
+      background: #E9E0D4;
+      border: none;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.7rem;
+      cursor: pointer;
+      margin: 2px;
+    }
+
+    .danger {
+      background: #FADCD9;
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 2rem;
+      font-size: 0.7rem;
+      color: #B3936E;
+    }
+  </style>
+</head>
+<body>
+<div class="app-container">
+  <div class="top-bar">
+    <div class="logo-area">
+      <h2><i class="fas fa-utensils"></i> Food Complaint Hub</h2>
+    </div>
+    <a href="index.html" class="home-link"><i class="fas fa-home"></i> All Halls</a>
+  </div>
+
+  <!-- Hall display & change -->
+  <div class="card" style="margin-bottom: 1.2rem;">
+    <div class="card-body" style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+      <div><strong><i class="fas fa-building"></i> Current Hall:</strong> <span id="currentHallDisplay" style="font-weight: 700; background:#E2F0F9; padding:4px 12px; border-radius: 40px;"></span></div>
+      <div>
+        <select id="hallSelector" style="width: auto; padding: 0.4rem 1rem;">
+          <option value="">Switch hall...</option>
+        </select>
+        <button id="changeHallBtn" class="small-btn" style="margin-left: 6px;">Go</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tab-bar">
+    <button class="tab-btn active" data-tab="submitTab">📝 Submit Feedback</button>
+    <button class="tab-btn" data-tab="communityTab">👥 Community Feed</button>
+    <button class="tab-btn" data-tab="trackTab">🔍 Track Your Submission</button>
+    <button class="tab-btn" data-tab="adminTab">🛡️ Admin</button>
+  </div>
+
+  <!-- Tab 1: Submit -->
+  <div id="submitTab" class="tab-content active-tab">
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-pen-alt"></i> New Feedback</h3></div>
+      <div class="card-body">
+        <div class="form-group">
+          <label>Feedback Type</label>
+          <select id="feedbackType">
+            <option value="Concern">⚠️ Concern</option>
+            <option value="Complaint">😤 Complaint</option>
+            <option value="Compliment">🌟 Compliment</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Title (optional)</label>
+          <input type="text" id="titleInput" placeholder="Brief summary">
+        </div>
+        <div class="form-group">
+          <label>Description *</label>
+          <textarea id="descInput" rows="3" placeholder="Tell us what happened..."></textarea>
+        </div>
+        <button class="btn btn-primary" id="submitBtn">✍️ Submit Anonymously</button>
+        <div id="submitMsg" style="margin-top: 1rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 2: Community Feed -->
+  <div id="communityTab" class="tab-content">
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-users"></i> Community Feedback</h3></div>
+      <div class="card-body">
+        <div class="filter-row">
+          <label>Filter by Hall:</label>
+          <select id="feedHallFilter" style="width: auto; flex:1"></select>
+          <button id="applyFeedFilter" class="small-btn">Filter</button>
+        </div>
+        <div id="communityFeedContainer" class="feed-list">Loading...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 3: Track submission -->
+  <div id="trackTab" class="tab-content">
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-search"></i> Check Status</h3></div>
+      <div class="card-body">
+        <div class="form-group">
+          <label>Your Submission ID</label>
+          <input type="text" id="trackingId" placeholder="e.g., FB-ABC123">
+        </div>
+        <button id="checkStatusBtn" class="btn">Check Status</button>
+        <div id="trackResult" style="margin-top: 1rem;"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 4: Admin -->
+  <div id="adminTab" class="tab-content">
+    <div class="card">
+      <div class="card-header"><h3><i class="fas fa-shield-alt"></i> Staff Dashboard</h3></div>
+      <div class="card-body">
+        <div id="adminLoginArea">
+          <button id="adminLoginBtn" class="btn">🔐 Admin Login</button>
+        </div>
+        <div id="adminPanel" style="display: none; margin-top: 1.5rem;">
+          <div id="adminTableContainer"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <footer>⚡ Submissions are anonymous • Staff marks "seen" & "responded" • Ready for database integration</footer>
+</div>
+
+<script>
+  // ---------- DATABASE LAYER (localStorage, ready for real DB) ----------
+  const STORAGE_KEY = "campus_food_db";
+
+  // Helper: load all submissions
+  function loadSubmissions() {
+    const stored = localStorage.getItem(STORAGE_KEY);
+    if (stored) return JSON.parse(stored);
+    // Demo data
+    const demo = [
+      { id: "DEMO-4F9A", hall: "Nelson Mandela Hall", type: "Complaint", title: "Cold food", description: "Lunch was cold today.", timestamp: new Date().toLocaleString(), isSeen: true, isReviewed: false },
+      { id: "DEMO-2C7B", hall: "Drostdy Hall", type: "Compliment", title: "Great variety", description: "Loved the vegan options.", timestamp: new Date().toLocaleString(), isSeen: false, isReviewed: false }
+    ];
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(demo));
+    return demo;
+  }
+
+  function saveSubmissions(subs) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(subs));
+  }
+
+  function generateId() {
+    return "FB" + Math.random().toString(36).substring(2, 8).toUpperCase();
+  }
+
+  function addSubmission(hall, type, title, desc) {
+    const subs = loadSubmissions();
+    const newSub = {
+      id: generateId(),
+      hall: hall,
+      type: type,
+      title: title.trim() || "(no title)",
+      description: desc.trim(),
+      timestamp: new Date().toLocaleString(),
+      isSeen: false,
+      isReviewed: false
+    };
+    subs.unshift(newSub);
+    saveSubmissions(subs);
+    return newSub.id;
+  }
+
+  function getSubmissionsByHall(hall) {
+    return loadSubmissions().filter(s => s.hall === hall).sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+  }
+
+  function getAllSubmissions() {
+    return loadSubmissions().sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+  }
+
+  function updateSubmission(id, updates) {
+    let subs = loadSubmissions();
+    const idx = subs.findIndex(s => s.id === id);
+    if (idx !== -1) { subs[idx] = { ...subs[idx], ...updates }; saveSubmissions(subs); return true; }
+    return false;
+  }
+
+  function deleteSubmission(id) {
+    let subs = loadSubmissions();
+    const filtered = subs.filter(s => s.id !== id);
+    if (filtered.length !== subs.length) { saveSubmissions(filtered); return true; }
+    return false;
+  }
+
+  function getSubmissionById(id) {
+    return loadSubmissions().find(s => s.id === id);
+  }
+
+  // ---------- APP STATE ----------
+  let currentHall = "";
+  let adminAuthenticated = false;
+  const HALLS = [
+    "Courtenay-Latimer Hall", "Drostdy Hall", "Nelson Mandela Hall", "Allan Webb Hall",
+    "Kimberly Hall", "Hobson Hall", "Hugh Masekela Hall", "Founders Hall",
+    "Lilian Ngoyi Hall", "Desmond Tutu Hall", "Mariam Makeba Hall", "St Mary’s Hall",
+    "Solomon Kalushi Mahlangu Hall"
+  ];
+
+  // Helper: escape HTML
+  function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+  // Populate hall selectors
+  function populateHallSelectors() {
+    const selector = document.getElementById("hallSelector");
+    const feedFilter = document.getElementById("feedHallFilter");
+    if (selector) {
+      selector.innerHTML = '<option value="">-- Switch hall --</option>' + HALLS.map(h => `<option value="${h}">${h}</option>`).join('');
+      selector.value = currentHall;
+    }
+    if (feedFilter) {
+      feedFilter.innerHTML = '<option value="all">All Halls</option>' + HALLS.map(h => `<option value="${h}">${h}</option>`).join('');
+    }
+  }
+
+  // Update displayed hall
+  function setCurrentHall(hall, updateUrl = true) {
+    currentHall = hall;
+    document.getElementById("currentHallDisplay").innerText = currentHall;
+    if (updateUrl) {
+      const url = new URL(window.location);
+      url.searchParams.set('hall', currentHall);
+      window.history.pushState({}, '', url);
+    }
+    populateHallSelectors();
+    document.getElementById("hallSelector").value = currentHall;
+    // reset tabs view if needed
+  }
+
+  // Load hall from URL param
+  function initHallFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    const hallParam = params.get('hall');
+    if (hallParam && HALLS.includes(hallParam)) {
+      setCurrentHall(hallParam, false);
+    } else {
+      // fallback: first hall
+      setCurrentHall(HALLS[0], false);
+    }
+  }
+
+  // ---------- UI RENDERING ----------
+  function renderCommunityFeed(filterHall = null) {
+    const container = document.getElementById("communityFeedContainer");
+    if (!container) return;
+    let subs = getAllSubmissions();
+    const selectedFilter = filterHall || document.getElementById("feedHallFilter")?.value || "all";
+    if (selectedFilter !== "all") {
+      subs = subs.filter(s => s.hall === selectedFilter);
+    }
+    if (subs.length === 0) {
+      container.innerHTML = '<div class="alert">📭 No feedback yet.</div>';
+      return;
+    }
+    let html = '<div class="feed-list">';
+    subs.forEach(sub => {
+      const responded = sub.isReviewed ? "✅ Responded" : "⏳ Pending";
+      html += `
+        <div class="feed-item">
+          <div><strong>${sub.type}</strong> • <small>${sub.timestamp}</small> • <span class="badge">${sub.hall}</span></div>
+          <div><strong>${escapeHtml(sub.title)}</strong></div>
+          <div>${escapeHtml(sub.description.length > 120 ? sub.description.slice(0,120)+'…' : sub.description)}</div>
+          <div class="response-badge">${responded} ${sub.isSeen ? '• Seen by staff' : ''}</div>
+        </div>
+      `;
+    });
+    html += '</div>';
+    container.innerHTML = html;
+  }
+
+  function renderAdminTable() {
+    if (!adminAuthenticated) return;
+    const subs = getAllSubmissions();
+    const container = document.getElementById("adminTableContainer");
+    if (!container) return;
+    if (subs.length === 0) { container.innerHTML = '<div class="alert">No submissions.</div>'; return; }
+    let html = `<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse; font-size:0.85rem;">`;
+    html += `<thead><tr><th>ID</th><th>Hall</th><th>Type</th><th>Title</th><th>Seen</th><th>Responded</th><th>Actions</th></tr></thead><tbody>`;
+    subs.forEach(sub => {
+      html += `<tr>
+        <td>${sub.id}</td>
+        <td>${sub.hall}</td>
+        <td>${sub.type}</td>
+        <td>${escapeHtml(sub.title)}</td>
+        <td>${sub.isSeen ? '✅' : '❌'}</td>
+        <td>${sub.isReviewed ? '✅' : '❌'}</td>
+        <td>
+          <button class="small-btn" data-id="${sub.id}" data-action="toggleSeen">👁️ Seen/Unseen</button>
+          <button class="small-btn" data-id="${sub.id}" data-action="toggleReviewed">✍️ Respond/Unrespond</button>
+          <button class="small-btn danger" data-id="${sub.id}" data-action="delete">🗑️ Delete</button>
+        </td>
+      </tr>`;
+    });
+    html += `</tbody></table></div><small>⚡ "Responded" means reviewed/action taken.</small>`;
+    container.innerHTML = html;
+    // attach event handlers
+    container.querySelectorAll("[data-action]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-id");
+        const action = btn.getAttribute("data-action");
+        if (action === "toggleSeen") {
+          const sub = getSubmissionById(id);
+          if (sub) updateSubmission(id, { isSeen: !sub.isSeen });
+          renderAdminTable(); renderCommunityFeed();
+        } else if (action === "toggleReviewed") {
+          const sub = getSubmissionById(id);
+          if (sub) updateSubmission(id, { isReviewed: !sub.isReviewed });
+          renderAdminTable(); renderCommunityFeed();
+        } else if (action === "delete") {
+          if (confirm("Delete permanently?")) { deleteSubmission(id); renderAdminTable(); renderCommunityFeed(); }
+        }
+      });
+    });
+  }
+
+  // Submit handler
+  function handleSubmit() {
+    const type = document.getElementById("feedbackType").value;
+    const title = document.getElementById("titleInput").value;
+    const desc = document.getElementById("descInput").value.trim();
+    const msgDiv = document.getElementById("submitMsg");
+    if (desc.length < 3) {
+      msgDiv.innerHTML = '<div class="alert">⚠️ Description must be at least 3 characters.</div>';
+      return;
+    }
+    const newId = addSubmission(currentHall, type, title, desc);
+    document.getElementById("titleInput").value = "";
+    document.getElementById("descInput").value = "";
+    msgDiv.innerHTML = `<div class="alert" style="background:#E8F0EA;">✅ Submitted! Your ID: <strong>${newId}</strong>. Use "Track" tab to see updates.</div>`;
+    setTimeout(() => msgDiv.innerHTML = "", 5000);
+    renderCommunityFeed();
+    if (adminAuthenticated) renderAdminTable();
+  }
+
+  // Track status
+  function checkStatus() {
+    const id = document.getElementById("trackingId").value.trim();
+    const resultDiv = document.getElementById("trackResult");
+    if (!id) { resultDiv.innerHTML = '<div class="alert">Enter an ID.</div>'; return; }
+    const sub = getSubmissionById(id);
+    if (!sub) { resultDiv.innerHTML = '<div class="alert">❌ ID not found.</div>'; return; }
+    resultDiv.innerHTML = `
+      <div style="background:#F9EFE0; border-radius:1rem; padding:1rem;">
+        <p><strong>ID:</strong> ${sub.id}</p>
+        <p><strong>Hall:</strong> ${sub.hall}</p>
+        <p><strong>Type:</strong> ${sub.type}</p>
+        <p><strong>Title:</strong> ${escapeHtml(sub.title)}</p>
+        <p><strong>Description:</strong> ${escapeHtml(sub.description)}</p>
+        <p><strong>Seen by staff:</strong> ${sub.isSeen ? "✅ Yes" : "⏳ Not yet"}</p>
+        <p><strong>Responded (reviewed):</strong> ${sub.isReviewed ? "✅ Yes" : "⏳ Pending"}</p>
+      </div>
+    `;
+  }
+
+  // Admin login
+  function setupAdmin() {
+    const loginBtn = document.getElementById("adminLoginBtn");
+    const panel = document.getElementById("adminPanel");
+    loginBtn.addEventListener("click", () => {
+      const pwd = prompt("Enter admin password:");
+      if (pwd === "foodreview2025") {
+        adminAuthenticated = true;
+        loginBtn.style.display = "none";
+        panel.style.display = "block";
+        renderAdminTable();
+      } else alert("Wrong password.");
+    });
+  }
+
+  // Tab switching
+  function initTabs() {
+    const btns = document.querySelectorAll('.tab-btn');
+    const contents = document.querySelectorAll('.tab-content');
+    btns.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const tabId = btn.getAttribute('data-tab');
+        contents.forEach(c => c.classList.remove('active-tab'));
+        document.getElementById(tabId).classList.add('active-tab');
+        btns.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if (tabId === 'communityTab') renderCommunityFeed();
+        if (tabId === 'adminTab' && adminAuthenticated) renderAdminTable();
+      });
+    });
+  }
+
+  // Event listeners
+  function bindEvents() {
+    document.getElementById("submitBtn").addEventListener("click", handleSubmit);
+    document.getElementById("checkStatusBtn").addEventListener("click", checkStatus);
+    document.getElementById("changeHallBtn").addEventListener("click", () => {
+      const newHall = document.getElementById("hallSelector").value;
+      if (newHall && HALLS.includes(newHall)) setCurrentHall(newHall, true);
+    });
+    document.getElementById("applyFeedFilter").addEventListener("click", () => renderCommunityFeed());
+    document.getElementById("feedHallFilter").addEventListener("change", () => renderCommunityFeed());
+  }
+
+  // initialize everything
+  function init() {
+    initHallFromUrl();
+    populateHallSelectors();
+    bindEvents();
+    initTabs();
+    setupAdmin();
+    renderCommunityFeed();
+  }
+
+  init();
+</script>
+</body>
+</html>

@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Campus Food Voice | Dining Halls</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, sans-serif;
+    }
+
+    body {
+      background: #F9F3E7; /* warm beige */
+      min-height: 100vh;
+      padding: 2rem 1.5rem;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Hero */
+    .hero {
+      background: #D9EAF5; /* light blue */
+      border-radius: 2rem;
+      padding: 2rem;
+      margin-bottom: 2.5rem;
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #1F3B4C;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .tagline {
+      color: #2C5A6E;
+      margin-top: 0.5rem;
+      font-weight: 500;
+    }
+
+    /* Hall grid */
+    .hall-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+      gap: 1.8rem;
+    }
+
+    .hall-card {
+      background: #FEFBF5;
+      border-radius: 1.6rem;
+      border: 1px solid #EADBC6;
+      padding: 1.8rem 1rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      box-shadow: 0 6px 12px -8px rgba(0, 0, 0, 0.05);
+    }
+
+    .hall-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 20px 30px -12px rgba(0, 0, 0, 0.15);
+      border-color: #C9D9E8;
+      background: #FFFFFF;
+    }
+
+    .hall-icon {
+      width: 80px;
+      height: 80px;
+      background: #E2F0F9;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 1rem auto;
+      font-size: 2.5rem;
+      color: #3C6E8C;
+    }
+
+    .hall-name {
+      font-weight: 700;
+      font-size: 1.05rem;
+      color: #2C5A6E;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 3rem;
+      color: #A88B6A;
+      font-size: 0.8rem;
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <h1>
+      🍽️ Campus Food Voice
+      <i class="fas fa-comment-dots" style="font-size: 1.8rem;"></i>
+    </h1>
+    <div class="tagline">Select your dining hall to share feedback — anonymously</div>
+  </div>
+
+  <div class="hall-grid" id="hallGrid"></div>
+  <div class="footer-note">⚡ All feedback is anonymous • Staff reviews daily</div>
+</div>
+
+<script>
+  // ---------- DINING HALLS LIST ----------
+  const HALLS = [
+    "Courtenay-Latimer Hall", "Drostdy Hall", "Nelson Mandela Hall", "Allan Webb Hall",
+    "Kimberly Hall", "Hobson Hall", "Hugh Masekela Hall", "Founders Hall",
+    "Lilian Ngoyi Hall", "Desmond Tutu Hall", "Mariam Makeba Hall", "St Mary’s Hall",
+    "Solomon Kalushi Mahlangu Hall"
+  ];
+
+  function renderHallGrid() {
+    const grid = document.getElementById("hallGrid");
+    if (!grid) return;
+    grid.innerHTML = HALLS.map(hall => `
+      <div class="hall-card" data-hall="${hall}">
+        <div class="hall-icon">
+          <i class="fas fa-utensils"></i>
+          <!-- Replace with <img> if you have custom images -->
+        </div>
+        <div class="hall-name">${hall}</div>
+      </div>
+    `).join('');
+
+    // Attach click event to each card
+    document.querySelectorAll('.hall-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const hallName = card.getAttribute('data-hall');
+        // Navigate to complaint page, passing hall via URL parameter
+        window.location.href = `complaint.html?hall=${encodeURIComponent(hallName)}`;
+      });
+    });
+  }
+
+  renderHallGrid();
+</script>
+</body>
+</html>
