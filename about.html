@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>About Us | Campus Food Voice</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, sans-serif;
+    }
+
+    body {
+      background: #F9F3E7;
+      min-height: 100vh;
+      padding: 2rem 1.5rem;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    /* Hero / header */
+    .hero {
+      background: #D9EAF5;
+      border-radius: 2rem;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      text-align: center;
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.05);
+      border: 1px solid rgba(255,255,255,0.5);
+    }
+
+    h1 {
+      font-size: 2.4rem;
+      font-weight: 700;
+      color: #1F3B4C;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .back-link {
+      display: inline-block;
+      margin-top: 1rem;
+      background: #F0E5D8;
+      padding: 0.5rem 1.2rem;
+      border-radius: 3rem;
+      text-decoration: none;
+      color: #4F3A25;
+      font-weight: 500;
+      transition: 0.2s;
+    }
+
+    .back-link:hover {
+      background: #E2D0BC;
+    }
+
+    /* card */
+    .card {
+      background: #FEFBF5;
+      border-radius: 1.8rem;
+      border: 1px solid #EADBC6;
+      overflow: hidden;
+      margin-bottom: 2rem;
+      box-shadow: 0 12px 24px -12px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-header {
+      background: #E2F0F9;
+      padding: 1.2rem 1.8rem;
+      border-bottom: 1px solid #CDDDE9;
+    }
+
+    .card-header h2 {
+      color: #1A4A5F;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.6rem;
+    }
+
+    .card-body {
+      padding: 2rem;
+    }
+
+    .description-text {
+      font-size: 1.05rem;
+      line-height: 1.6;
+      color: #2F3E46;
+      margin-bottom: 1.8rem;
+    }
+
+    .description-text p {
+      margin-bottom: 1rem;
+    }
+
+    .highlight {
+      background: #E8F0EA;
+      padding: 0.2rem 0.4rem;
+      border-radius: 8px;
+      font-weight: 500;
+    }
+
+    .image-container {
+      text-align: center;
+      margin: 2rem 0 1rem;
+    }
+
+    .lion-image {
+      max-width: 280px;
+      width: 100%;
+      border-radius: 24px;
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1);
+      border: 3px solid #D9EAF5;
+      background: #FFF;
+      padding: 8px;
+    }
+
+    .caption {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #3C6E8C;
+      margin-top: 1rem;
+      letter-spacing: 0.5px;
+    }
+
+    .footer-note {
+      text-align: center;
+      margin-top: 2.5rem;
+      color: #A88B6A;
+      font-size: 0.8rem;
+    }
+
+    hr {
+      margin: 1.5rem 0;
+      border: 0;
+      height: 1px;
+      background: #E5D5C0;
+    }
+
+    @media (max-width: 640px) {
+      body {
+        padding: 1rem;
+      }
+      .card-body {
+        padding: 1.5rem;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <div class="hero">
+    <h1>
+      <i class="fas fa-info-circle"></i> About Us
+      <i class="fas fa-utensils"></i>
+    </h1>
+    <a href="index.html" class="back-link"><i class="fas fa-arrow-left"></i> Back to Dining Halls</a>
+  </div>
+
+  <div class="card">
+    <div class="card-header">
+      <h2><i class="fas fa-bullhorn"></i> Why Campus Food Voice?</h2>
+    </div>
+    <div class="card-body">
+      <div class="description-text">
+        <p><strong>Campus Food Voice</strong> was built to give every student a <span class="highlight">simple, anonymous, and effective</span> way to share feedback about dining hall experiences.</p>
+        <p>We know that many students feel anxious, shy, or unsure about speaking up in person. Some complaints go unreported, small issues become big problems, and hall representatives often hear about problems too late.</p>
+        <p>This platform <strong>bridges the gap</strong> between students and their <strong>SRC Hall Representatives</strong> and <strong>Food Service Managers</strong>. Every submission is instantly visible to the responsible admin of that hall, allowing them to:</p>
+        <ul style="margin-left: 1.8rem; margin-top: 0.5rem; margin-bottom: 1rem;">
+          <li>✅ Respond quickly to complaints or concerns</li>
+          <li>✅ Flag recurring issues and escalate to the correct department</li>
+          <li>✅ Acknowledge compliments and positive feedback</li>
+          <li>✅ Keep a transparent record of all hall feedback</li>
+        </ul>
+        <p>Students can now <strong>confidently submit feedback</strong> without fear or embarrassment. Your voice matters – and it reaches the right people instantly, anonymously if you choose.</p>
+        <p>By using <strong>real‑time status tracking</strong> (with a unique ID), you’ll always know when staff have seen your message and what they replied. No more wondering if anyone listened.</p>
+        <p>We believe that <strong>great campus food comes from great communication</strong>. This tool is our contribution to a better, more responsive dining experience for everyone.</p>
+      </div>
+
+      <hr>
+
+      <div class="image-container">
+        <img src="Images/lion.png" alt="Lion mascot" class="lion-image" onerror="this.onerror=null; this.src='https://placehold.co/280x280?text=🦁+Lion'">
+        <div class="caption">
+          <i class="fas fa-paw"></i> Brought to you by the Lion <i class="fas fa-paw"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer-note">
+    <i class="fas fa-shield-alt"></i> Anonymous by design · Staff responses within 24h · Every hall has its own admin
+  </div>
+</div>
+</body>
+</html>
