@@ -1,0 +1,11 @@
+{
+  "name": "Campus Food Voice",
+  "short_name": "FoodVoice",
+  "icons": [
+    { "src": "/icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/icon-512.png", "type": "image/png", "sizes": "512x512" }
+  ],
+  "theme_color": "#F9F3E7",
+  "background_color": "#F9F3E7",
+  "display": "standalone"
+}

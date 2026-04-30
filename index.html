@@ -5,7 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>Campus Food Voice | Dining Halls</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-  <style>
+
+<!-- Standard favicon (browser tab) -->
+<link rel="icon" type="images/x-icon" href="Images/favicon.ico">
+<!-- Or if using PNG favicon: -->
+<link rel="icon" type="image/png" sizes="32x32" href="Images/icon-192.png">
+
+<!-- Apple Touch Icon (iOS home screen) -->
+<link rel="apple-touch-icon" sizes="180x180" href="Images/apple-touch-icon.png">
+
+<!-- Android / Chrome (optional) -->
+<link rel="manifest" href="Images/site.webmanifest">
+
+
+
+<style>
     * {
       margin: 0;
       padding: 0;
@@ -14,7 +28,7 @@
     }
 
     body {
-      background: #F9F3E7; /* warm beige */
+      background: #F9F3E7;
       min-height: 100vh;
       padding: 2rem 1.5rem;
     }
@@ -24,9 +38,8 @@
       margin: 0 auto;
     }
 
-    /* Hero */
     .hero {
-      background: #D9EAF5; /* light blue */
+      background: #D9EAF5;
       border-radius: 2rem;
       padding: 2rem;
       margin-bottom: 2.5rem;
@@ -52,7 +65,6 @@
       font-weight: 500;
     }
 
-    /* Hall grid */
     .hall-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
@@ -77,10 +89,11 @@
       background: #FFFFFF;
     }
 
+    /* ✅ Transparent background + full image visible */
     .hall-icon {
       width: 80px;
       height: 80px;
-      background: #E2F0F9;
+      background: transparent;      /* was #E2F0F9 – now invisible */
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -103,6 +116,8 @@
       font-size: 0.8rem;
     }
   </style>
+
+
 </head>
 <body>
 <div class="container">
@@ -127,28 +142,55 @@
     "Solomon Kalushi Mahlangu Hall"
   ];
 
-  function renderHallGrid() {
-    const grid = document.getElementById("hallGrid");
-    if (!grid) return;
-    grid.innerHTML = HALLS.map(hall => `
+
+
+
+function renderHallGrid() {
+  const grid = document.getElementById("hallGrid");
+  if (!grid) return;
+
+  const imageMap = {
+    "Courtenay-Latimer Hall": "courtenay-latimer.jpg",
+    "Drostdy Hall": "drostdy.jpg",
+    "Nelson Mandela Hall": "nelson-mandela.png",
+    "Allan Webb Hall": "allan-webb.jpg",
+    "Kimberly Hall": "kimberly.jpg",
+    "Hobson Hall": "hobson.png",
+    "Hugh Masekela Hall": "hugh-masekela.jpg",
+    "Founders Hall": "founders.jpg",
+    "Lilian Ngoyi Hall": "lilian-ngoyi.png",
+    "Desmond Tutu Hall": "desmond-tutu.jpg",
+    "Mariam Makeba Hall": "mariam-makeba.jpg",
+    "St Mary’s Hall": "st-marys.png",
+    "Solomon Kalushi Mahlangu Hall": "solomon-kalushi-mahlangu.png"
+  };
+
+  grid.innerHTML = HALLS.map(hall => {
+    const imageFile = imageMap[hall] || "default.jpg";
+    const imagePath = `Images/halls/${imageFile}`;
+
+    return `
       <div class="hall-card" data-hall="${hall}">
         <div class="hall-icon">
-          <i class="fas fa-utensils"></i>
-          <!-- Replace with <img> if you have custom images -->
+          <img src="${imagePath}" alt="${hall}" 
+               onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-utensils\'></i>';"
+               style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%;">
         </div>
         <div class="hall-name">${hall}</div>
       </div>
-    `).join('');
+    `;
+  }).join('');
 
-    // Attach click event to each card
-    document.querySelectorAll('.hall-card').forEach(card => {
-      card.addEventListener('click', () => {
-        const hallName = card.getAttribute('data-hall');
-        // Navigate to complaint page, passing hall via URL parameter
-        window.location.href = `complaint.html?hall=${encodeURIComponent(hallName)}`;
-      });
+  document.querySelectorAll('.hall-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const hallName = card.getAttribute('data-hall');
+      window.location.href = `complaint.html?hall=${encodeURIComponent(hallName)}`;
     });
-  }
+  });
+}
+
+
+
 
   renderHallGrid();
 </script>
