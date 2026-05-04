@@ -6,20 +6,13 @@
   <title>Campus Food Voice | Dining Halls</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-<!-- Standard favicon (browser tab) -->
-<link rel="icon" type="images/x-icon" href="Images/favicon.ico">
-<!-- Or if using PNG favicon: -->
-<link rel="icon" type="image/png" sizes="32x32" href="Images/icon-192.png">
+  <!-- Standard favicon (browser tab) -->
+  <link rel="icon" type="images/x-icon" href="Images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="Images/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="Images/apple-touch-icon.png">
+  <link rel="manifest" href="Images/site.webmanifest">
 
-<!-- Apple Touch Icon (iOS home screen) -->
-<link rel="apple-touch-icon" sizes="180x180" href="Images/apple-touch-icon.png">
-
-<!-- Android / Chrome (optional) -->
-<link rel="manifest" href="Images/site.webmanifest">
-
-
-
-<style>
+  <style>
     * {
       margin: 0;
       padding: 0;
@@ -30,12 +23,16 @@
     body {
       background: #F9F3E7;
       min-height: 100vh;
-      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
     }
 
     .container {
       max-width: 1400px;
       margin: 0 auto;
+      flex: 1;
+      width: 100%;
+      padding: 2rem 1.5rem 0 1.5rem;
     }
 
     .hero {
@@ -89,11 +86,10 @@
       background: #FFFFFF;
     }
 
-    /* ✅ Transparent background + full image visible */
     .hall-icon {
       width: 80px;
       height: 80px;
-      background: transparent;      /* was #E2F0F9 – now invisible */
+      background: transparent;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -109,88 +105,291 @@
       color: #2C5A6E;
     }
 
-    .footer-note {
+    /* ========== ENHANCED FOOTER STYLES ========== */
+    .campus-footer {
+      margin-top: 3.5rem;
+      background: #E7DBC8;
+      border-radius: 2rem 2rem 0 0;
+      padding: 2rem 2rem 1.5rem;
+      box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.03);
+      border-top: 1px solid rgba(94, 67, 42, 0.1);
+    }
+
+    .footer-inner {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 2rem;
+    }
+
+    .footer-brand {
+      flex: 2;
+      min-width: 200px;
+    }
+
+    .footer-brand h3 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #2C5A6E;
+      margin-bottom: 0.5rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .footer-brand p {
+      color: #5D4037;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      margin-top: 0.25rem;
+      max-width: 280px;
+    }
+
+    .footer-links {
+      flex: 3;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      justify-content: flex-start;
+    }
+
+    .footer-col {
+      min-width: 130px;
+    }
+
+    .footer-col h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1F3B4C;
+      letter-spacing: 0.5px;
+      margin-bottom: 1rem;
+      border-left: 3px solid #C9AB7B;
+      padding-left: 10px;
+    }
+
+    .footer-col ul {
+      list-style: none;
+    }
+
+    .footer-col ul li {
+      margin-bottom: 0.65rem;
+    }
+
+    .footer-col ul li a {
+      text-decoration: none;
+      color: #5B3E2A;
+      font-size: 0.85rem;
+      transition: color 0.2s, transform 0.1s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .footer-col ul li a i {
+      font-size: 0.75rem;
+      color: #A27B5C;
+      width: 18px;
+    }
+
+    .footer-col ul li a:hover {
+      color: #1F3B4C;
+      transform: translateX(3px);
+    }
+
+    .footer-social {
+      flex: 1.5;
+      min-width: 160px;
+    }
+
+    .footer-social h4 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #1F3B4C;
+      margin-bottom: 1rem;
+      border-left: 3px solid #C9AB7B;
+      padding-left: 10px;
+    }
+
+    .social-icons {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 1rem;
+    }
+
+    .social-icons a {
+      background: #FEFBF5;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: #3C6E8C;
+      font-size: 1.1rem;
+      transition: all 0.2s;
+      text-decoration: none;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+
+    .social-icons a:hover {
+      background: #2C5A6E;
+      color: white;
+      transform: translateY(-3px);
+    }
+
+    .footer-bottom {
       text-align: center;
-      margin-top: 3rem;
-      color: #A88B6A;
-      font-size: 0.8rem;
+      margin-top: 2rem;
+      padding-top: 1.2rem;
+      border-top: 1px dashed #CBB99A;
+      font-size: 0.75rem;
+      color: #7B5F45;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .footer-bottom p {
+      margin: 0;
+    }
+
+    .footer-badge {
+      display: flex;
+      gap: 1rem;
+    }
+
+    .footer-badge span {
+      background: #FFF3E4;
+      padding: 0.2rem 0.8rem;
+      border-radius: 30px;
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #86684A;
+    }
+
+    @media (max-width: 700px) {
+      .footer-inner {
+        flex-direction: column;
+        gap: 1.8rem;
+      }
+      .footer-bottom {
+        flex-direction: column;
+        text-align: center;
+      }
+      .footer-brand p {
+        max-width: 100%;
+      }
     }
   </style>
-
-
 </head>
 <body>
 <div class="container">
   <div class="hero">
     <h1>
-      🍽️Dining Hall Review
+      🍽️ Dining Hall Review
       <i class="fas fa-comment-dots" style="font-size: 1.8rem;"></i>
     </h1>
     <div class="tagline">Select your dining hall to share feedback — anonymously</div>
+    
   </div>
 
   <div class="hall-grid" id="hallGrid"></div>
-  <div class="footer-note">⚡ All feedback is anonymous • Staff reviews daily</div>
 </div>
 
+<!-- ENHANCED FOOTER -->
+<footer class="campus-footer">
+  <div class="footer-inner">
+    
+    <div class="footer-links">
+
+      <div class="footer-col">
+        <h4>Info</h4>
+        <ul>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy & Anonymity</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Student Guidelines</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Hall Meal Hours</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Dietary Options</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-social">
+      <h4>Contact Admin</h4>
+
+      <p style="font-size: 0.75rem; color:#7B5F45; margin-top: 0.6rem;"><i class="far fa-envelope"></i> kovhi.tshikovhi17.27@gmail.com</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Campus Food Voice — Empowering student voices across dining halls</p>
+    <div class="footer-badge">
+      <span><i class="fas fa-leaf"></i> Sustainable Eats</span>
+      <span><i class="fas fa-chart-line"></i> Real-time feedback</span>
+    </div>
+  </div>
+</footer>
+
 <script>
-  // ---------- DINING HALLS LIST ----------
   const HALLS = [
     "Courtenay-Latimer Hall", "Drostdy Hall", "Nelson Mandela Hall", "Allan Webb Hall",
     "Kimberly Hall", "Hobson Hall", "Hugh Masekela Hall", "Founders Hall",
-    "Lilian Ngoyi Hall", "Desmond Tutu Hall", "Mariam Makeba Hall", "St Mary’s Hall",
+    "Lilian Ngoyi Hall", "Desmond Tutu Hall", "Mariam Makeba Hall", "St Mary's Hall",
     "Solomon Kalushi Mahlangu Hall"
   ];
 
+  function renderHallGrid() {
+    const grid = document.getElementById("hallGrid");
+    if (!grid) return;
 
+    const imageMap = {
+      "Courtenay-Latimer Hall": "courtenay-latimer.jpg",
+      "Drostdy Hall": "drostdy.jpg",
+      "Nelson Mandela Hall": "nelson-mandela.png",
+      "Allan Webb Hall": "allan-webb.jpg",
+      "Kimberly Hall": "kimberly.jpg",
+      "Hobson Hall": "hobson.png",
+      "Hugh Masekela Hall": "hugh-masekela.jpg",
+      "Founders Hall": "founders.jpg",
+      "Lilian Ngoyi Hall": "lilian-ngoyi.png",
+      "Desmond Tutu Hall": "desmond-tutu.jpg",
+      "Mariam Makeba Hall": "mariam-makeba.png",
+      "St Mary’s Hall": "st-marys.png",
+      "Solomon Kalushi Mahlangu Hall": "solomon-kalushi-mahlangu.png"
+    };
 
+    grid.innerHTML = HALLS.map(hall => {
+      const imageFile = imageMap[hall] || "default.jpg";
+      const imagePath = `Images/halls/${imageFile}`;
 
-function renderHallGrid() {
-  const grid = document.getElementById("hallGrid");
-  if (!grid) return;
-
-  const imageMap = {
-    "Courtenay-Latimer Hall": "courtenay-latimer.jpg",
-    "Drostdy Hall": "drostdy.jpg",
-    "Nelson Mandela Hall": "nelson-mandela.png",
-    "Allan Webb Hall": "allan-webb.jpg",
-    "Kimberly Hall": "kimberly.jpg",
-    "Hobson Hall": "hobson.png",
-    "Hugh Masekela Hall": "hugh-masekela.jpg",
-    "Founders Hall": "founders.jpg",
-    "Lilian Ngoyi Hall": "lilian-ngoyi.png",
-    "Desmond Tutu Hall": "desmond-tutu.jpg",
-    "Mariam Makeba Hall": "mariam-makeba.jpg",
-    "St Mary’s Hall": "st-marys.png",
-    "Solomon Kalushi Mahlangu Hall": "solomon-kalushi-mahlangu.png"
-  };
-
-  grid.innerHTML = HALLS.map(hall => {
-    const imageFile = imageMap[hall] || "default.jpg";
-    const imagePath = `Images/halls/${imageFile}`;
-
-    return `
-      <div class="hall-card" data-hall="${hall}">
-        <div class="hall-icon">
-          <img src="${imagePath}" alt="${hall}" 
-               onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-utensils\'></i>';"
-               style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%;">
+      return `
+        <div class="hall-card" data-hall="${hall}">
+          <div class="hall-icon">
+            <img src="${imagePath}" alt="${hall}" 
+                 onerror="this.onerror=null; this.parentElement.innerHTML='<i class=\'fas fa-utensils\'></i>';"
+                 style="width: 80px; height: 80px; object-fit: contain; border-radius: 50%;">
+          </div>
+          <div class="hall-name">${hall}</div>
         </div>
-        <div class="hall-name">${hall}</div>
-      </div>
-    `;
-  }).join('');
+      `;
+    }).join('');
 
-  document.querySelectorAll('.hall-card').forEach(card => {
-    card.addEventListener('click', () => {
-      const hallName = card.getAttribute('data-hall');
-      window.location.href = `complaint.html?hall=${encodeURIComponent(hallName)}`;
+    document.querySelectorAll('.hall-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const hallName = card.getAttribute('data-hall');
+        window.location.href = `complaint.html?hall=${encodeURIComponent(hallName)}`;
+      });
     });
-  });
-}
-
-
-
+  }
 
   renderHallGrid();
 </script>
