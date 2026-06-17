@@ -15,6 +15,7 @@
   <link rel="manifest" href="Images/site.webmanifest">
 
   <style>
+  <style>
     * {
       margin: 0;
       padding: 0;
@@ -25,12 +26,16 @@
     body {
       background: #F9F3E7;
       min-height: 100vh;
-      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
     }
 
     .container {
       max-width: 1400px;
       margin: 0 auto;
+      flex: 1;
+      width: 100%;
+      padding: 2rem 1.5rem 0 1.5rem;
     }
 
     /* Hero */
@@ -113,6 +118,7 @@
       width: 80px;
       height: 80px;
       background: transparent;
+      background: transparent;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -177,6 +183,7 @@
   <div class="hero">
     <h1>
       🍽️ Dining Hall Review
+      🍽️ Dining Hall Review
       <i class="fas fa-comment-dots" style="font-size: 1.8rem;"></i>
     </h1>
     <div class="tagline">Select your dining hall to share feedback — anonymously</div>
@@ -201,15 +208,55 @@
   </div>
 </div>
 
+<!-- ENHANCED FOOTER -->
+<footer class="campus-footer">
+  <div class="footer-inner">
+    
+    <div class="footer-links">
+
+      <div class="footer-col">
+        <h4>Info</h4>
+        <ul>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> About Us</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Privacy & Anonymity</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Student Guidelines</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <ul>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Hall Meal Hours</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> Dietary Options</a></li>
+          <li><a href="#"><i class="fas fa-chevron-right"></i> FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-social">
+      <h4>Contact Admin</h4>
+
+      <p style="font-size: 0.75rem; color:#7B5F45; margin-top: 0.6rem;"><i class="far fa-envelope"></i> kovhi.tshikovhi17.27@gmail.com</p>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 Campus Food Voice — Empowering student voices across dining halls</p>
+    <div class="footer-badge">
+      <span><i class="fas fa-leaf"></i> Sustainable Eats</span>
+      <span><i class="fas fa-chart-line"></i> Real-time feedback</span>
+    </div>
+  </div>
+</footer>
+
 <script>
-  // ---------- DINING HALLS LIST ----------
   const HALLS = [
     "Courtenay-Latimer Hall", "Drostdy Hall", "Nelson Mandela Hall", "Allan Webb Hall",
     "Kimberly Hall", "Hobson Hall", "Hugh Masekela Hall", "Founders Hall",
-    "Lilian Ngoyi Hall", "Desmond Tutu Hall", "Mariam Makeba Hall", "St Mary’s Hall",
+    "Lilian Ngoyi Hall", "Desmond Tutu Hall", "Mariam Makeba Hall", "St Mary's Hall",
     "Solomon Kalushi Mahlangu Hall"
   ];
 
+  function renderHallGrid() {
+    const grid = document.getElementById("hallGrid");
+    if (!grid) return;
   function renderHallGrid() {
     const grid = document.getElementById("hallGrid");
     if (!grid) return;
@@ -233,6 +280,9 @@
     grid.innerHTML = HALLS.map(hall => {
       const imageFile = imageMap[hall] || "default.jpg";
       const imagePath = `Images/halls/${imageFile}`;
+    grid.innerHTML = HALLS.map(hall => {
+      const imageFile = imageMap[hall] || "default.jpg";
+      const imagePath = `Images/halls/${imageFile}`;
 
       return `
         <div class="hall-card" data-hall="${hall}">
@@ -246,6 +296,13 @@
       `;
     }).join('');
 
+    document.querySelectorAll('.hall-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const hallName = card.getAttribute('data-hall');
+        window.location.href = `complaint.html?hall=${encodeURIComponent(hallName)}`;
+      });
+    });
+  }
     document.querySelectorAll('.hall-card').forEach(card => {
       card.addEventListener('click', () => {
         const hallName = card.getAttribute('data-hall');
