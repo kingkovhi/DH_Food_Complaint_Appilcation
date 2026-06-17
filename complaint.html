@@ -5,297 +5,89 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Food Complaint Review | Campus Voice</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- Favicon & Icons -->
+  <link rel="icon" type="image/x-icon" href="Images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="Images/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="Images/apple-touch-icon.png">
+  <link rel="manifest" href="Images/site.webmanifest">
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+
   <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: system-ui, 'Segoe UI', 'Inter', sans-serif;
-    }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, 'Segoe UI', 'Inter', sans-serif; }
+    body { background: #F9F3E7; padding: 1.5rem; color: #2F3E46; }
+    .app-container { max-width: 1300px; margin: 0 auto; }
 
-    body {
-      background: #F9F3E7;
-      padding: 1.5rem;
-      color: #2F3E46;
-    }
+    /* Top Bar */
+    .top-bar { background: #D9EAF5; border-radius: 1.8rem; padding: 1rem 1.8rem; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; margin-bottom: 2rem; gap: 1rem; }
+    .logo-area h2 { color: #1F3B4C; font-size: 1.5rem; }
+    .home-link { background: #F0E5D8; padding: 0.5rem 1.2rem; border-radius: 3rem; text-decoration: none; color: #4F3A25; font-weight: 500; transition: 0.2s; }
+    .home-link:hover { background: #E2D0BC; }
+    .user-info { background: #E2F0F9; padding: 0.3rem 1rem; border-radius: 3rem; font-size: 0.9rem; display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; }
+    .logout-btn { background: #FADCD9; border: none; padding: 0.2rem 0.8rem; border-radius: 2rem; cursor: pointer; }
+    .delete-account-btn { background: #D9D9D9; border: none; padding: 0.2rem 0.8rem; border-radius: 2rem; cursor: pointer; color: #8B0000; }
+    .delete-account-btn:hover { background: #FADCD9; }
 
-    .app-container {
-      max-width: 1300px;
-      margin: 0 auto;
-    }
+    /* Tabs */
+    .tab-bar { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1.8rem; border-bottom: 2px solid #E5D5C0; padding-bottom: 0.5rem; }
+    .tab-btn { background: transparent; border: none; padding: 0.5rem 1.3rem; font-weight: 600; border-radius: 3rem; cursor: pointer; color: #6B5A48; transition: 0.2s; }
+    .tab-btn.active { background: #D9EAF5; color: #1A4A5F; }
+    .tab-content { display: none; animation: fade 0.2s ease; }
+    .active-tab { display: block; }
+    @keyframes fade { from { opacity: 0; transform: translateY(6px);} to { opacity: 1; transform: translateY(0);} }
 
-    .top-bar {
-      background: #D9EAF5;
-      border-radius: 1.8rem;
-      padding: 1rem 1.8rem;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 2rem;
-      gap: 1rem;
-    }
+    /* Cards */
+    .card { background: #FEFBF5; border-radius: 1.5rem; border: 1px solid #EADBC6; overflow: hidden; margin-bottom: 2rem; box-shadow: 0 6px 14px rgba(0,0,0,0.02); }
+    .card-header { background: #E2F0F9; padding: 1rem 1.5rem; border-bottom: 1px solid #CDDDE9; }
+    .card-header h3 { color: #1A4A5F; display: flex; align-items: center; gap: 8px; }
+    .card-body { padding: 1.5rem; }
+    .form-group { margin-bottom: 1.2rem; }
+    label { font-weight: 600; font-size: 0.85rem; display: block; margin-bottom: 0.3rem; color: #4C6A7A; }
+    select, input, textarea { width: 100%; padding: 0.75rem 1rem; border-radius: 1rem; border: 1px solid #E2D4C2; background: white; font-size: 0.9rem; }
 
-    .logo-area h2 {
-      color: #1F3B4C;
-      font-size: 1.5rem;
-    }
+    /* Buttons */
+    .btn { background: #C9E0EC; border: none; padding: 0.6rem 1.5rem; border-radius: 2rem; font-weight: 600; cursor: pointer; transition: 0.2s; }
+    .btn-primary { background: #BED7E8; }
+    .btn-primary:hover { background: #A8C9DF; transform: translateY(-1px); }
+    .btn-danger { background: #FADCD9; color: #8B0000; }
+    .btn-danger:hover { background: #F8C8C4; }
 
-    .home-link {
-      background: #F0E5D8;
-      padding: 0.5rem 1.2rem;
-      border-radius: 3rem;
-      text-decoration: none;
-      color: #4F3A25;
-      font-weight: 500;
-      transition: 0.2s;
-    }
+    /* Feed */
+    .feed-list { display: flex; flex-direction: column; gap: 1rem; }
+    .feed-item { background: white; border-radius: 1rem; padding: 1rem; border: 1px solid #EEE2D4; }
+    .badge { display: inline-block; padding: 3px 10px; border-radius: 30px; font-size: 0.7rem; background: #F0E5D8; }
+    .response-badge { font-size: 0.7rem; margin-top: 0.5rem; }
+    .filter-row { display: flex; gap: 1rem; align-items: center; flex-wrap: wrap; margin-bottom: 1rem; }
+    .alert { background: #FBEFE3; padding: 0.8rem; border-radius: 1rem; margin-top: 1rem; }
+    .small-btn { background: #E9E0D4; border: none; padding: 4px 10px; border-radius: 20px; font-size: 0.7rem; cursor: pointer; margin: 2px; }
+    .danger { background: #FADCD9; }
 
-    .home-link:hover {
-      background: #E2D0BC;
-    }
+    /* Modals */
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); display: flex; align-items: center; justify-content: center; z-index: 1000; }
+    .modal-card { background: #FEFBF5; border-radius: 2rem; max-width: 500px; width: 90%; padding: 2rem; box-shadow: 0 25px 40px rgba(0,0,0,0.2); }
 
-    .user-info {
-      background: #E2F0F9;
-      padding: 0.3rem 1rem;
-      border-radius: 3rem;
-      font-size: 0.9rem;
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
-    }
+    /* Admin */
+    .admin-reply-input { width: 100%; margin-top: 6px; padding: 6px; font-size: 0.8rem; border-radius: 1rem; border: 1px solid #ccc; }
+    .reply-text { background: #E8F0EA; padding: 8px; border-radius: 12px; margin-top: 8px; font-size: 0.85rem; border-left: 3px solid #4C6A7A; }
+    .admin-login-card { max-width: 400px; margin: 0 auto; }
+    .role-badge { background: #2C5A6E; color: white; padding: 4px 12px; border-radius: 30px; font-size: 0.8rem; }
 
-    .logout-btn {
-      background: #FADCD9;
-      border: none;
-      padding: 0.2rem 0.8rem;
-      border-radius: 2rem;
-      cursor: pointer;
-    }
-
-    .tab-bar {
-      display: flex;
-      gap: 0.8rem;
-      flex-wrap: wrap;
-      margin-bottom: 1.8rem;
-      border-bottom: 2px solid #E5D5C0;
-      padding-bottom: 0.5rem;
-    }
-
-    .tab-btn {
-      background: transparent;
-      border: none;
-      padding: 0.5rem 1.3rem;
-      font-weight: 600;
-      border-radius: 3rem;
-      cursor: pointer;
-      color: #6B5A48;
-      transition: 0.2s;
-    }
-
-    .tab-btn.active {
-      background: #D9EAF5;
-      color: #1A4A5F;
-    }
-
-    .tab-content {
-      display: none;
-      animation: fade 0.2s ease;
-    }
-
-    .active-tab {
-      display: block;
-    }
-
-    @keyframes fade {
-      from { opacity: 0; transform: translateY(6px);}
-      to { opacity: 1; transform: translateY(0);}
-    }
-
-    .card {
-      background: #FEFBF5;
-      border-radius: 1.5rem;
-      border: 1px solid #EADBC6;
-      overflow: hidden;
-      margin-bottom: 2rem;
-      box-shadow: 0 6px 14px rgba(0,0,0,0.02);
-    }
-
-    .card-header {
-      background: #E2F0F9;
-      padding: 1rem 1.5rem;
-      border-bottom: 1px solid #CDDDE9;
-    }
-
-    .card-header h3 {
-      color: #1A4A5F;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .card-body {
-      padding: 1.5rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.2rem;
-    }
-
-    label {
-      font-weight: 600;
-      font-size: 0.85rem;
-      display: block;
-      margin-bottom: 0.3rem;
-      color: #4C6A7A;
-    }
-
-    select, input, textarea {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border-radius: 1rem;
-      border: 1px solid #E2D4C2;
-      background: white;
-      font-size: 0.9rem;
-    }
-
-    .btn {
-      background: #C9E0EC;
-      border: none;
-      padding: 0.6rem 1.5rem;
-      border-radius: 2rem;
-      font-weight: 600;
-      cursor: pointer;
-      transition: 0.2s;
-    }
-
-    .btn-primary {
-      background: #BED7E8;
-    }
-
-    .btn-primary:hover {
-      background: #A8C9DF;
-      transform: translateY(-1px);
-    }
-
-    .feed-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .feed-item {
-      background: white;
-      border-radius: 1rem;
-      padding: 1rem;
-      border: 1px solid #EEE2D4;
-    }
-
-    .badge {
-      display: inline-block;
-      padding: 3px 10px;
-      border-radius: 30px;
-      font-size: 0.7rem;
-      background: #F0E5D8;
-    }
-
-    .response-badge {
-      font-size: 0.7rem;
-      margin-top: 0.5rem;
-    }
-
-    .filter-row {
-      display: flex;
-      gap: 1rem;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-bottom: 1rem;
-    }
-
-    .alert {
-      background: #FBEFE3;
-      padding: 0.8rem;
-      border-radius: 1rem;
-      margin-top: 1rem;
-    }
-
-    .small-btn {
-      background: #E9E0D4;
-      border: none;
-      padding: 4px 10px;
-      border-radius: 20px;
-      font-size: 0.7rem;
-      cursor: pointer;
-      margin: 2px;
-    }
-
-    .danger {
-      background: #FADCD9;
-    }
-
-    /* Modal overlay */
-    .modal-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.6);
-      backdrop-filter: blur(4px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-    }
-    .modal-card {
-      background: #FEFBF5;
-      border-radius: 2rem;
-      max-width: 500px;
-      width: 90%;
-      padding: 2rem;
-      box-shadow: 0 25px 40px rgba(0,0,0,0.2);
-    }
-    .admin-reply-input {
-      width: 100%;
-      margin-top: 6px;
-      padding: 6px;
-      font-size: 0.8rem;
-      border-radius: 1rem;
-      border: 1px solid #ccc;
-    }
-    .reply-text {
-      background: #E8F0EA;
-      padding: 8px;
-      border-radius: 12px;
-      margin-top: 8px;
-      font-size: 0.85rem;
-      border-left: 3px solid #4C6A7A;
-    }
-    .admin-login-card {
-      max-width: 400px;
-      margin: 0 auto;
-    }
-    .role-badge {
-      background: #2C5A6E;
-      color: white;
-      padding: 4px 12px;
-      border-radius: 30px;
-      font-size: 0.8rem;
-    }
-    footer {
-      text-align: center;
-      margin-top: 2rem;
-      font-size: 0.7rem;
-      color: #B3936E;
-    }
+    /* Footer */
+    .app-footer { text-align: center; margin-top: 2rem; font-size: 0.7rem; color: #B3936E; border-top: 1px solid #E5D5C0; padding-top: 1.5rem; }
+    .app-footer a { color: #4C6A7A; margin: 0 0.8rem; text-decoration: none; }
+    .app-footer a:hover { color: #1F3B4C; text-decoration: underline; }
+    .app-footer .footer-links { margin-bottom: 0.5rem; }
   </style>
 </head>
 <body>
 <div class="app-container">
+  <!-- Top Bar -->
   <div class="top-bar">
-    <div class="logo-area">
-      <h2><i class="fas fa-utensils"></i> Food Complaint Review</h2>
-    </div>
+    <div class="logo-area"><h2><i class="fas fa-utensils"></i> Food Complaint Review</h2></div>
     <div style="display: flex; gap: 1rem; align-items: center;">
       <div id="userInfoDisplay" class="user-info"></div>
       <a href="index.html" class="home-link"><i class="fas fa-home"></i> All Halls</a>
@@ -307,9 +99,7 @@
     <div class="card-body" style="padding: 1rem 1.5rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
       <div><strong><i class="fas fa-building"></i> Current Hall:</strong> <span id="currentHallDisplay" style="font-weight: 700; background:#E2F0F9; padding:4px 12px; border-radius: 40px;"></span></div>
       <div>
-        <select id="hallSelector" style="width: auto; padding: 0.4rem 1rem;">
-          <option value="">Switch hall...</option>
-        </select>
+        <select id="hallSelector" style="width: auto; padding: 0.4rem 1rem;"><option value="">Switch hall...</option></select>
         <button id="changeHallBtn" class="small-btn" style="margin-left: 6px;">Go</button>
       </div>
     </div>
@@ -319,81 +109,96 @@
   <div class="tab-bar">
     <button class="tab-btn active" data-tab="submitTab">📝 Submit Feedback</button>
     <button class="tab-btn" data-tab="communityTab">👥 Community Feed</button>
-    <button class="tab-btn" data-tab="trackTab">🔍 Track Your Submission</button>
+    <button class="tab-btn" data-tab="mySubmissionsTab">📋 My Submissions</button>
+    <button class="tab-btn" data-tab="trackTab">🔍 Track Any ID</button>
     <button class="tab-btn" data-tab="adminTab">🛡️ Admin</button>
   </div>
 
   <!-- Tab 1: Submit -->
   <div id="submitTab" class="tab-content active-tab">
-    <div class="card">
-      <div class="card-header"><h3>📝 New Feedback</h3></div>
+    <div class="card"><div class="card-header"><h3>📝 New Feedback</h3></div>
       <div class="card-body">
-        <div class="form-group">
-          <label>Feedback Type</label>
-          <select id="feedbackType">
-            <option value="Concern">⚠️ Concern</option>
-            <option value="Complaint">😤 Complaint</option>
-            <option value="Compliment">🌟 Compliment</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Title (optional)</label>
-          <input type="text" id="titleInput" placeholder="Brief summary">
-        </div>
-        <div class="form-group">
-          <label>Description *</label>
-          <textarea id="descInput" rows="3" placeholder="Tell us what happened..."></textarea>
-        </div>
+        <div class="form-group"><label>Feedback Type</label><select id="feedbackType"><option value="Concern">⚠️ Concern</option><option value="Complaint">😤 Complaint</option><option value="Compliment">🌟 Compliment</option></select></div>
+        <div class="form-group"><label>Title (optional)</label><input type="text" id="titleInput" placeholder="Brief summary"></div>
+        <div class="form-group"><label>Description *</label><textarea id="descInput" rows="3" placeholder="Tell us what happened..."></textarea></div>
         <button class="btn btn-primary" id="submitBtn">✍️ Submit Anonymously</button>
         <div id="submitMsg" style="margin-top: 1rem;"></div>
       </div>
     </div>
   </div>
 
-  <!-- Tab 2: Community Feed -->
+  <!-- Tab 2: Community Feed (with search & pagination) -->
   <div id="communityTab" class="tab-content">
-    <div class="card">
-      <div class="card-header"><h3><i class="fas fa-users"></i> Community Feedback</h3></div>
+    <div class="card"><div class="card-header"><h3><i class="fas fa-users"></i> Community Feedback</h3></div>
       <div class="card-body">
         <div class="filter-row">
           <label>Filter by Hall:</label>
           <select id="feedHallFilter" style="width: auto; flex:1"></select>
+          <input type="text" id="feedSearchInput" placeholder="🔍 Search in title or description" style="width: 200px; padding: 0.4rem 0.8rem; border-radius: 2rem; border: 1px solid #E2D4C2;">
           <button id="applyFeedFilter" class="small-btn">Filter</button>
         </div>
         <div id="communityFeedContainer" class="feed-list">Loading...</div>
+        <div id="loadMoreContainer" style="text-align:center; margin-top: 1rem;"></div>
       </div>
     </div>
   </div>
 
-  <!-- Tab 3: Track submission -->
-  <div id="trackTab" class="tab-content">
-    <div class="card">
-      <div class="card-header"><h3><i class="fas fa-search"></i> Check Status & Replies</h3></div>
+  <!-- Tab 3: My Submissions -->
+  <div id="mySubmissionsTab" class="tab-content">
+    <div class="card"><div class="card-header"><h3><i class="fas fa-user"></i> My Submissions</h3></div>
       <div class="card-body">
-        <div class="form-group">
-          <label>Your Submission ID</label>
-          <input type="text" id="trackingId" placeholder="e.g., FB-ABC123">
-        </div>
+        <div id="mySubmissionsContainer" class="feed-list">Loading your posts...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Tab 4: Track any submission by ID -->
+  <div id="trackTab" class="tab-content">
+    <div class="card"><div class="card-header"><h3><i class="fas fa-search"></i> Track Submission by ID</h3></div>
+      <div class="card-body">
+        <div class="form-group"><label>Enter Submission ID</label><input type="text" id="trackingId" placeholder="e.g., FB-ABC123"></div>
         <button id="checkStatusBtn" class="btn">Check Status</button>
         <div id="trackResult" style="margin-top: 1rem;"></div>
       </div>
     </div>
   </div>
 
-  <!-- Tab 4: Admin -->
+  <!-- Tab 5: Admin (staff only) -->
   <div id="adminTab" class="tab-content">
-    <div class="card">
-      <div class="card-header"><h3><i class="fas fa-shield-alt"></i> Staff Dashboard</h3></div>
-      <div class="card-body">
-        <div id="adminPanelContainer"></div>
-      </div>
+    <div class="card"><div class="card-header"><h3><i class="fas fa-shield-alt"></i> Staff Dashboard</h3></div>
+      <div class="card-body"><div id="adminPanelContainer"></div></div>
     </div>
   </div>
-  <footer>⚡ Submissions are anonymous • Each hall has its own admin • Main admin oversees all halls</footer>
+
+  <!-- Footer -->
+  <footer class="app-footer">
+    <div class="footer-links">
+      <a href="about.html">About</a>
+      <a href="Rules.html">Dining Rules</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="index.html">🏠 Home</a>
+    </div>
+    ⚡ All feedback is anonymous to other students • Staff can see your name but not share it • Use "My Submissions" to track your own posts
+  </footer>
 </div>
 
 <script>
-  // ---------- DINING HALLS (same as index) ----------
+  // ----------------------------- FIREBASE CONFIG -----------------------------
+  const firebaseConfig = {
+    apiKey: "AIzaSyBgRjoKX-oqXzgHrG7wVc0oOvsqMb1UJ9s",
+    authDomain: "dh-application.firebaseapp.com",
+    projectId: "dh-application",
+    storageBucket: "dh-application.firebasestorage.app",
+    messagingSenderId: "247250900220",
+    appId: "1:247250900220:web:36266bb0bc207a54cbb379"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const db = firebase.firestore();
+  const auth = firebase.auth();
+  const submissionsCollection = db.collection("submissions");
+  const usersCollection = db.collection("users");
+
+  // ----------------------------- DINING HALLS -----------------------------
   const HALLS = [
     "Courtenay-Latimer Hall", "Drostdy Hall", "Nelson Mandela Hall", "Allan Webb Hall",
     "Kimberly Hall", "Hobson Hall", "Hugh Masekela Hall", "Founders Hall",
@@ -401,170 +206,157 @@
     "Solomon Kalushi Mahlangu Hall"
   ];
 
-  // ---------- LOCALSTORAGE KEYS ----------
-  const STORAGE_KEY = "campus_food_db";
-  const USER_KEY = "campus_food_user";
+  // ----------------------------- GLOBAL STATE -----------------------------
+  let currentUser = null;
+  let userProfile = null;
+  let currentHall = "";
+  let currentAdmin = { loggedIn: false, role: null, hallAccess: null };
 
-  // ---------- USER SESSION ----------
-  let currentUser = null;   // { name, studentNumber, assignedHall }
+  // Pagination state
+  let feedPageSize = 20;
+  let lastDoc = null;
+  let hasMore = true;
+  let isLoading = false;
+  let allSubmissions = [];
 
-  // ---------- DATABASE FUNCTIONS (unchanged from previous) ----------
-  function loadSubmissions() {
-    const stored = localStorage.getItem(STORAGE_KEY);
-    if (stored) return JSON.parse(stored);
-    const demo = [
-      { id: "DEMO-4F9A", hall: "Nelson Mandela Hall", type: "Complaint", title: "Cold food", description: "Lunch was cold today.", timestamp: new Date().toLocaleString(), isSeen: true, isReviewed: false, adminResponse: "" },
-      { id: "DEMO-2C7B", hall: "Drostdy Hall", type: "Compliment", title: "Great variety", description: "Loved the vegan options.", timestamp: new Date().toLocaleString(), isSeen: false, isReviewed: false, adminResponse: "" }
-    ];
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(demo));
-    return demo;
-  }
-  function saveSubmissions(subs) { localStorage.setItem(STORAGE_KEY, JSON.stringify(subs)); }
+  // Helper: generate short ID
   function generateId() { return "FB" + Math.random().toString(36).substring(2, 8).toUpperCase(); }
-  function addSubmission(hall, type, title, desc) {
-    const subs = loadSubmissions();
+
+  // ----------------------------- FIREBASE CRUD -----------------------------
+  async function addSubmission(hall, type, title, desc) {
+    if (!currentUser) throw new Error("Not logged in");
+    const newId = generateId();
     const newSub = {
-      id: generateId(),
+      id: newId,
       hall: hall,
       type: type,
       title: title.trim() || "(no title)",
       description: desc.trim(),
-      timestamp: new Date().toLocaleString(),
+      timestamp: firebase.firestore.FieldValue.serverTimestamp(),
       isSeen: false,
       isReviewed: false,
-      adminResponse: ""
+      adminResponse: "",
+      userId: currentUser.uid,
+      userDisplayName: userProfile?.name || "Anonymous"
     };
-    subs.unshift(newSub);
-    saveSubmissions(subs);
-    return newSub.id;
+    await submissionsCollection.doc(newId).set(newSub);
+    return newId;
   }
-  function updateSubmission(id, updates) {
-    let subs = loadSubmissions();
-    const idx = subs.findIndex(s => s.id === id);
-    if (idx !== -1) { subs[idx] = { ...subs[idx], ...updates }; saveSubmissions(subs); return true; }
-    return false;
+
+  async function updateSubmission(id, updates) {
+    await submissionsCollection.doc(id).update(updates);
   }
-  function deleteSubmission(id) {
-    let subs = loadSubmissions();
-    const filtered = subs.filter(s => s.id !== id);
-    if (filtered.length !== subs.length) { saveSubmissions(filtered); return true; }
-    return false;
+
+  async function deleteSubmission(id) {
+    await submissionsCollection.doc(id).delete();
   }
-  function getSubmissionById(id) { return loadSubmissions().find(s => s.id === id); }
 
-  // ---------- ADMIN CREDENTIALS ----------
-  const HALL_ADMIN_PASSWORDS = {
-    "Courtenay-Latimer Hall": "CL2025", "Drostdy Hall": "DH2025", "Nelson Mandela Hall": "NM2025",
-    "Allan Webb Hall": "AW2025", "Kimberly Hall": "KH2025", "Hobson Hall": "HH2025",
-    "Hugh Masekela Hall": "HM2025", "Founders Hall": "FH2025", "Lilian Ngoyi Hall": "LN2025",
-    "Desmond Tutu Hall": "DT2025", "Mariam Makeba Hall": "MM2025", "St Mary’s Hall": "SM2025",
-    "Solomon Kalushi Mahlangu Hall": "SK2025"
-  };
-  const MAIN_ADMIN_PASSWORD = "TheLionM12";
+  async function canSubmit(userId) {
+    const userDoc = await usersCollection.doc(userId).get();
+    if (!userDoc.exists) return true;
+    const lastTime = userDoc.data().lastSubmissionTime;
+    if (!lastTime) return true;
+    const now = firebase.firestore.Timestamp.now();
+    const diff = now.toDate() - lastTime.toDate();
+    const cooldownSeconds = 30;
+    return diff >= cooldownSeconds * 1000;
+  }
 
-  let currentAdmin = { loggedIn: false, role: null, hallAccess: null };
-
-  // ---------- APP STATE ----------
-  let currentHall = "";
-
-  function escapeHtml(str) { if(!str) return ''; return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
-
-  // ---------- USER REGISTRATION MODAL ----------
-  function showRegistrationModal() {
-    const modalDiv = document.createElement('div');
-    modalDiv.className = 'modal-overlay';
-    modalDiv.innerHTML = `
-      <div class="modal-card">
-        <h2 style="margin-bottom: 1rem;">🍽️ Create Account</h2>
-        <div class="form-group">
-          <label>Full Name</label>
-          <input type="text" id="regName" placeholder="e.g., Thabo Mbeko">
-        </div>
-        <div class="form-group">
-          <label>Student Number (format: G24T4891)</label>
-          <input type="text" id="regStudentNumber" placeholder="G24T4891" style="text-transform: uppercase;">
-        </div>
-        <div class="form-group">
-          <label>Your Dining Hall</label>
-          <select id="regHall">${HALLS.map(h => `<option value="${h}">${h}</option>`).join('')}</select>
-        </div>
-        <button id="registerBtn" class="btn btn-primary">Register</button>
-        <div id="regError" class="alert" style="display:none; margin-top: 1rem;"></div>
-      </div>
-    `;
-    document.body.appendChild(modalDiv);
-
-    const studentNumInput = modalDiv.querySelector('#regStudentNumber');
-    studentNumInput.addEventListener('input', (e) => { e.target.value = e.target.value.toUpperCase(); });
-
-    modalDiv.querySelector('#registerBtn').addEventListener('click', () => {
-      const name = modalDiv.querySelector('#regName').value.trim();
-      let studentNumber = modalDiv.querySelector('#regStudentNumber').value.trim().toUpperCase();
-      const hall = modalDiv.querySelector('#regHall').value;
-      const errorDiv = modalDiv.querySelector('#regError');
-
-      if (!name || !studentNumber || !hall) {
-        errorDiv.innerText = 'All fields required.';
-        errorDiv.style.display = 'block';
-        return;
+  // ---------- ACCOUNT DELETION ----------
+  async function deleteUserAccount() {
+    if (!currentUser) return;
+    if (!confirm("⚠️ Are you sure you want to permanently delete your account and all your submissions? This cannot be undone.")) return;
+    try {
+      const submissionsSnapshot = await submissionsCollection.where("userId", "==", currentUser.uid).get();
+      const batch = db.batch();
+      submissionsSnapshot.forEach(doc => batch.delete(doc.ref));
+      await batch.commit();
+      await usersCollection.doc(currentUser.uid).delete();
+      await currentUser.delete();
+      await auth.signOut();
+      alert("✅ Your account and all your data have been permanently deleted.");
+    } catch (error) {
+      if (error.code === 'auth/requires-recent-login') {
+        const password = prompt("For security, please re-enter your password to delete your account:");
+        if (!password) return;
+        const credential = firebase.auth.EmailAuthProvider.credential(currentUser.email, password);
+        try {
+          await currentUser.reauthenticateWithCredential(credential);
+          await deleteUserAccount();
+        } catch (reAuthError) {
+          alert("Re-authentication failed: " + reAuthError.message);
+        }
+      } else {
+        alert("Error deleting account: " + error.message);
       }
-      // simple format check: letter, two digits, letter, four digits? but just check it's not empty and contains letters/digits
-      if (!/^[A-Z0-9]{7,10}$/i.test(studentNumber)) {
-        errorDiv.innerText = 'Student number should be letters and numbers only, e.g., G24T4891.';
-        errorDiv.style.display = 'block';
-        return;
-      }
-
-      const user = { name, studentNumber, assignedHall: hall };
-      localStorage.setItem(USER_KEY, JSON.stringify(user));
-      currentUser = user;
-      modalDiv.remove();
-      updateUserDisplay();
-      // Also set currentHall to the user's assigned hall? (could keep URL param but we'll set it)
-      // To avoid confusion, set currentHall to assigned hall.
-      setCurrentHall(currentUser.assignedHall, true);
-      renderCommunityFeed();
-      // Refresh UI
-    });
-  }
-
-  function updateUserDisplay() {
-    const container = document.getElementById('userInfoDisplay');
-    if (currentUser) {
-      container.innerHTML = `
-        <img width="16" height="16" src="https://img.icons8.com/ios-glyphs/30/user--v1.png" alt="user"/>
-        <span>${escapeHtml(currentUser.name)} (${escapeHtml(currentUser.studentNumber)}) - ${escapeHtml(currentUser.assignedHall)}</span>
-        <button id="logoutUserBtn" class="logout-btn">Logout</button>
-      `;
-      const logoutBtn = document.getElementById('logoutUserBtn');
-      if (logoutBtn) logoutBtn.onclick = () => {
-        localStorage.removeItem(USER_KEY);
-        currentUser = null;
-        updateUserDisplay();
-        showRegistrationModal();
-        // reset currentHall to first hall? Keep as is but will affect submit (prevent submission)
-      };
-    } else {
-      container.innerHTML = '<span>👤 Not logged in</span>';
     }
   }
 
-  // ---------- UI RENDER FUNCTIONS (remain similar, but with submit restriction) ----------
-  function renderCommunityFeed(filterHall = null) {
+  // ----------------------------- COMMUNITY FEED WITH PAGINATION -----------------------------
+  async function loadFeedFirstPage(hallFilter = "all", searchTerm = "") {
+    lastDoc = null;
+    hasMore = true;
+    allSubmissions = [];
+    document.getElementById("loadMoreContainer").innerHTML = '';
+    await loadFeedNextPage(hallFilter, searchTerm);
+  }
+
+  async function loadFeedNextPage(hallFilter = "all", searchTerm = "") {
+    if (isLoading || !hasMore) return;
+    isLoading = true;
+    document.getElementById("loadMoreContainer").innerHTML = '<span style="color:#6B5A48;">Loading more...</span>';
+
+    try {
+      let query = submissionsCollection.orderBy("timestamp", "desc").limit(feedPageSize);
+      if (hallFilter !== "all") query = query.where("hall", "==", hallFilter);
+      if (lastDoc) query = query.startAfter(lastDoc);
+
+      const snapshot = await query.get();
+      const docs = snapshot.docs;
+      if (docs.length < feedPageSize) hasMore = false;
+      else if (docs.length > 0) lastDoc = docs[docs.length - 1];
+
+      const newSubs = docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      allSubmissions = allSubmissions.concat(newSubs);
+
+      let filtered = allSubmissions;
+      if (searchTerm.trim() !== "") {
+        const term = searchTerm.toLowerCase();
+        filtered = filtered.filter(s => s.title.toLowerCase().includes(term) || s.description.toLowerCase().includes(term));
+      }
+
+      renderCommunityFeedUI(filtered);
+
+      if (hasMore) {
+        document.getElementById("loadMoreContainer").innerHTML = `<button id="loadMoreBtn" class="small-btn">📥 Load More</button>`;
+        document.getElementById("loadMoreBtn").addEventListener("click", () => {
+          loadFeedNextPage(hallFilter, searchTerm);
+        });
+      } else {
+        document.getElementById("loadMoreContainer").innerHTML = '<span style="color:#A88B6A; font-size:0.8rem;">— End of feed —</span>';
+      }
+    } catch (err) {
+      console.error("Error loading feed:", err);
+      document.getElementById("loadMoreContainer").innerHTML = '<span style="color:red;">Error loading more.</span>';
+    }
+    isLoading = false;
+  }
+
+  // ----------------------------- UI RENDERING -----------------------------
+  function renderCommunityFeedUI(submissions) {
     const container = document.getElementById("communityFeedContainer");
     if (!container) return;
-    let subs = loadSubmissions();
-    const selectedFilter = filterHall || document.getElementById("feedHallFilter")?.value || "all";
-    if (selectedFilter !== "all") subs = subs.filter(s => s.hall === selectedFilter);
-    subs.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
-    if (subs.length === 0) { container.innerHTML = '<div class="alert">📭 No feedback yet.</div>'; return; }
+    if (submissions.length === 0) {
+      container.innerHTML = '<div class="alert">📭 No feedback matches your filters.</div>';
+      return;
+    }
     let html = '<div class="feed-list">';
-    subs.forEach(sub => {
+    submissions.forEach(sub => {
       const responded = sub.isReviewed ? "✅ Responded" : "⏳ Pending";
       const hasReply = sub.adminResponse && sub.adminResponse.trim() !== "";
       html += `
         <div class="feed-item">
-          <div><strong>${sub.type}</strong> • <small>${sub.timestamp}</small> • <span class="badge">${sub.hall}</span></div>
+          <div><strong>${sub.type}</strong> • <small>${sub.timestamp?.toDate?.().toLocaleString() || "recent"}</small> • <span class="badge">${sub.hall}</span></div>
           <div><strong>${escapeHtml(sub.title)}</strong></div>
           <div>${escapeHtml(sub.description.length > 120 ? sub.description.slice(0,120)+'…' : sub.description)}</div>
           <div class="response-badge">${responded} ${sub.isSeen ? '• Seen by staff' : ''}</div>
@@ -576,145 +368,349 @@
     container.innerHTML = html;
   }
 
-  function renderAdminDashboard() {
-    const container = document.getElementById("adminPanelContainer");
-    if (!currentAdmin.loggedIn) {
-      container.innerHTML = `
-        <div class="admin-login-card" style="max-width: 400px; margin: 0 auto;">
-          <div class="form-group"><label>Select Hall or Main Admin</label><select id="adminHallSelect"><option value="main">⭐ Main Admin (all halls)</option>${HALLS.map(h => `<option value="${h}">🏠 ${h}</option>`).join('')}</select></div>
-          <div class="form-group"><label>Password</label><input type="password" id="adminPassword" placeholder="Enter password"></div>
-          <button id="adminLoginExecute" class="btn btn-primary">🔐 Login</button>
-          <div id="adminLoginError" class="alert" style="display:none;"></div>
+  function renderMySubmissionsUI(submissions) {
+    const container = document.getElementById("mySubmissionsContainer");
+    if (!container) return;
+    if (submissions.length === 0) {
+      container.innerHTML = '<div class="alert">📭 You haven’t submitted any feedback yet.</div>';
+      return;
+    }
+    let html = '<div class="feed-list">';
+    submissions.forEach(sub => {
+      const responded = sub.isReviewed ? "✅ Responded" : "⏳ Pending";
+      const hasReply = sub.adminResponse && sub.adminResponse.trim() !== "";
+      html += `
+        <div class="feed-item" id="post-${sub.id}">
+          <div><strong>${sub.type}</strong> • <small>${sub.timestamp?.toDate?.().toLocaleString() || "recent"}</small> • <span class="badge">${sub.hall}</span></div>
+          <div><strong id="title-${sub.id}">${escapeHtml(sub.title)}</strong></div>
+          <div id="desc-${sub.id}">${escapeHtml(sub.description)}</div>
+          <div class="response-badge">${responded} ${sub.isSeen ? '• Seen by staff' : ''}</div>
+          ${hasReply ? `<div class="response-badge"><i class="fas fa-reply-all"></i> Staff reply: ${escapeHtml(sub.adminResponse)}</div>` : ''}
+          <div class="response-badge"><i class="fas fa-id-card"></i> Your ID: <strong>${sub.id}</strong></div>
+          <div class="action-group" style="margin-top: 8px;">
+            <button class="small-btn edit-btn" data-id="${sub.id}">✏️ Edit</button>
+            <button class="small-btn danger delete-btn" data-id="${sub.id}">🗑️ Delete</button>
+          </div>
+          <div id="edit-area-${sub.id}" style="display:none; margin-top:8px;">
+            <input type="text" id="edit-title-${sub.id}" value="${escapeHtml(sub.title)}" style="width:100%; margin-bottom:4px;">
+            <textarea id="edit-desc-${sub.id}" rows="2" style="width:100%;">${escapeHtml(sub.description)}</textarea>
+            <button class="small-btn save-edit-btn" data-id="${sub.id}">💾 Save</button>
+            <button class="small-btn cancel-edit-btn" data-id="${sub.id}">Cancel</button>
+          </div>
         </div>
       `;
-      document.getElementById("adminLoginExecute")?.addEventListener("click", () => {
-        const selected = document.getElementById("adminHallSelect").value;
-        const pwd = document.getElementById("adminPassword").value;
-        if (selected === "main" && pwd === MAIN_ADMIN_PASSWORD) {
-          currentAdmin = { loggedIn: true, role: "main", hallAccess: null };
-          renderAdminDashboard();
-          renderCommunityFeed();
-        } else if (HALL_ADMIN_PASSWORDS[selected] === pwd) {
-          currentAdmin = { loggedIn: true, role: "hall", hallAccess: selected };
-          renderAdminDashboard();
-          renderCommunityFeed();
-        } else {
-          document.getElementById("adminLoginError").innerText = "Wrong password.";
+    });
+    html += '</div>';
+    container.innerHTML = html;
+
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = btn.getAttribute('data-id');
+        document.getElementById(`edit-area-${id}`).style.display = 'block';
+        btn.style.display = 'none';
+      });
+    });
+    document.querySelectorAll('.cancel-edit-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        const id = btn.getAttribute('data-id');
+        document.getElementById(`edit-area-${id}`).style.display = 'none';
+        document.querySelector(`.edit-btn[data-id="${id}"]`).style.display = 'inline-block';
+      });
+    });
+    document.querySelectorAll('.save-edit-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        const id = btn.getAttribute('data-id');
+        const newTitle = document.getElementById(`edit-title-${id}`).value.trim();
+        const newDesc = document.getElementById(`edit-desc-${id}`).value.trim();
+        if (newDesc.length < 3) {
+          alert("Description must be at least 3 characters.");
+          return;
+        }
+        await updateSubmission(id, { title: newTitle || "(no title)", description: newDesc });
+        document.getElementById(`edit-area-${id}`).style.display = 'none';
+        document.querySelector(`.edit-btn[data-id="${id}"]`).style.display = 'inline-block';
+      });
+    });
+    document.querySelectorAll('.delete-btn').forEach(btn => {
+      btn.addEventListener('click', async (e) => {
+        if (confirm("Delete this submission permanently?")) {
+          await deleteSubmission(btn.getAttribute('data-id'));
+        }
+      });
+    });
+  }
+
+  function renderAdminDashboardUI(submissions) {
+    const container = document.getElementById("adminPanelContainer");
+    if (!currentAdmin.loggedIn) {
+      container.innerHTML = `<div class="admin-login-card"><div class="form-group"><label>Email</label><input type="email" id="adminEmail"></div><div class="form-group"><label>Password</label><input type="password" id="adminPwd"></div><button id="adminLoginBtn" class="btn btn-primary">Login as Admin</button><div id="adminLoginError" class="alert" style="display:none;"></div></div>`;
+      document.getElementById("adminLoginBtn").addEventListener("click", async () => {
+        const email = document.getElementById("adminEmail").value;
+        const pwd = document.getElementById("adminPwd").value;
+        try {
+          const cred = await auth.signInWithEmailAndPassword(email, pwd);
+          const user = cred.user;
+          const adminDoc = await db.collection("admins").doc(user.uid).get();
+          if (adminDoc.exists && adminDoc.data().role) {
+            currentAdmin = { loggedIn: true, role: adminDoc.data().role, hallAccess: adminDoc.data().hallAccess || null };
+            listenAdminPanel();
+            if (document.getElementById("communityTab").classList.contains("active-tab")) loadFeedFirstPage(document.getElementById("feedHallFilter")?.value || "all", document.getElementById("feedSearchInput")?.value || "");
+          } else {
+            await auth.signOut();
+            document.getElementById("adminLoginError").innerText = "Not an admin user.";
+            document.getElementById("adminLoginError").style.display = "block";
+          }
+        } catch (err) {
+          document.getElementById("adminLoginError").innerText = err.message;
           document.getElementById("adminLoginError").style.display = "block";
         }
       });
       return;
     }
-    const roleText = currentAdmin.role === "main" ? "⭐ Main Admin (all halls)" : `🏠 Hall Admin: ${currentAdmin.hallAccess}`;
-    let subs = loadSubmissions();
-    if (currentAdmin.role === "hall") subs = subs.filter(s => s.hall === currentAdmin.hallAccess);
-    subs.sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
-    let tableHtml = `<div style="margin-bottom:1rem;"><span class="role-badge">${roleText}</span></div>`;
-    if (currentAdmin.role === "main") {
-      tableHtml += `<div class="filter-row"><label>Filter by hall:</label><select id="mainAdminHallFilter"><option value="all">All Halls</option>${HALLS.map(h => `<option value="${h}">${h}</option>`).join('')}</select><button id="applyMainFilter" class="small-btn">Apply</button></div>`;
-    }
-    tableHtml += `<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse; font-size:0.8rem;"><thead><tr><th>ID</th><th>Hall</th><th>Type</th><th>Title</th><th>Seen</th><th>Responded</th><th>Admin Reply</th><th>Actions</th></tr></thead><tbody>`;
-    subs.forEach(sub => {
+    const roleText = currentAdmin.role === "main" ? "⭐ Main Admin" : `🏠 Hall Admin: ${currentAdmin.hallAccess}`;
+    let tableHtml = `<div style="margin-bottom:1rem;"><span class="role-badge">${roleText}</span> <button id="adminLogoutBtn" class="small-btn danger">Logout</button></div>`;
+    tableHtml += `<div style="overflow-x:auto;"><table style="width:100%; border-collapse:collapse;"><thead><tr><th>ID</th><th>Hall</th><th>User</th><th>Type</th><th>Title</th><th>Seen</th><th>Responded</th><th>Admin Reply</th><th>Actions</th></tr></thead><tbody>`;
+    submissions.forEach(sub => {
       tableHtml += `<tr>
-        <td>${sub.id}</td><td>${sub.hall}</td><td>${sub.type}</td><td>${escapeHtml(sub.title)}</td>
+        <td>${sub.id}</td><td>${sub.hall}</td><td>${escapeHtml(sub.userDisplayName || "?")}</td><td>${sub.type}</td>
+        <td><strong>${escapeHtml(sub.title)}</strong></td>
         <td>${sub.isSeen ? '✅' : '❌'}</td><td>${sub.isReviewed ? '✅' : '❌'}</td>
-        <td><input type="text" id="reply-${sub.id}" class="admin-reply-input" placeholder="Write a reply..." value="${escapeHtml(sub.adminResponse)}" style="width:180px;"><button class="small-btn" data-id="${sub.id}" data-action="sendReply">📨 Send Reply</button></td>
+        <td><input type="text" id="reply-${sub.id}" class="admin-reply-input" value="${escapeHtml(sub.adminResponse || '')}" style="width:150px;"><button class="small-btn" data-id="${sub.id}" data-action="sendReply">📨 Reply</button></td>
         <td><button class="small-btn" data-id="${sub.id}" data-action="toggleSeen">👁️ Seen</button><button class="small-btn" data-id="${sub.id}" data-action="toggleReviewed">✍️ Responded</button><button class="small-btn danger" data-id="${sub.id}" data-action="delete">🗑️</button></td>
       </tr>`;
     });
-    tableHtml += `</tbody></table></div><div style="margin-top:1rem;"><button id="adminLogoutBtn" class="small-btn danger">🚪 Logout</button></div>`;
+    tableHtml += `</tbody></table></div>`;
     container.innerHTML = tableHtml;
     container.querySelectorAll("[data-action]").forEach(btn => {
-      btn.addEventListener("click", () => {
+      btn.addEventListener("click", async () => {
         const id = btn.getAttribute("data-id");
         const action = btn.getAttribute("data-action");
         if (action === "toggleSeen") {
-          const sub = getSubmissionById(id);
-          if (sub) updateSubmission(id, { isSeen: !sub.isSeen });
-          renderAdminDashboard(); renderCommunityFeed();
+          const doc = await submissionsCollection.doc(id).get();
+          if (doc.exists) await updateSubmission(id, { isSeen: !doc.data().isSeen });
         } else if (action === "toggleReviewed") {
-          const sub = getSubmissionById(id);
-          if (sub) updateSubmission(id, { isReviewed: !sub.isReviewed });
-          renderAdminDashboard(); renderCommunityFeed();
+          const doc = await submissionsCollection.doc(id).get();
+          if (doc.exists) await updateSubmission(id, { isReviewed: !doc.data().isReviewed });
         } else if (action === "delete") {
-          if (confirm("Delete permanently?")) { deleteSubmission(id); renderAdminDashboard(); renderCommunityFeed(); }
+          if (confirm("Delete permanently?")) await deleteSubmission(id);
         } else if (action === "sendReply") {
           const newReply = document.getElementById(`reply-${id}`).value.trim();
-          updateSubmission(id, { adminResponse: newReply, isReviewed: true });
-          renderAdminDashboard(); renderCommunityFeed();
+          await updateSubmission(id, { adminResponse: newReply, isReviewed: true });
         }
       });
     });
-    if (currentAdmin.role === "main") {
-      document.getElementById("applyMainFilter")?.addEventListener("click", () => { renderAdminDashboard(); });
-    }
-    document.getElementById("adminLogoutBtn")?.addEventListener("click", () => { currentAdmin = { loggedIn: false, role: null, hallAccess: null }; renderAdminDashboard(); renderCommunityFeed(); });
+    document.getElementById("adminLogoutBtn").addEventListener("click", async () => {
+      await auth.signOut();
+      currentAdmin = { loggedIn: false, role: null, hallAccess: null };
+      if (unsubscribeAdmin) unsubscribeAdmin();
+      renderAdminDashboardUI([]);
+      loadFeedFirstPage(document.getElementById("feedHallFilter")?.value || "all", document.getElementById("feedSearchInput")?.value || "");
+    });
   }
 
-  // ---------- SUBMIT HANDLER WITH HALL RESTRICTION ----------
-  function handleSubmit() {
-    if (!currentUser) {
-      alert("Please register an account first.");
-      showRegistrationModal();
+  let unsubscribeAdmin = null;
+  function listenAdminPanel() {
+    if (unsubscribeAdmin) unsubscribeAdmin();
+    let query = submissionsCollection.orderBy("timestamp", "desc");
+    if (currentAdmin.role === "hall") query = query.where("hall", "==", currentAdmin.hallAccess);
+    unsubscribeAdmin = query.onSnapshot(snapshot => {
+      const subs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderAdminDashboardUI(subs);
+    });
+  }
+
+  // ----------------------------- AUTH & USER PROFILE -----------------------------
+  async function registerStudent(email, password, name, studentNumber, hall) {
+    const cred = await auth.createUserWithEmailAndPassword(email, password);
+    const user = cred.user;
+    await usersCollection.doc(user.uid).set({
+      uid: user.uid,
+      email: email,
+      name: name,
+      studentNumber: studentNumber,
+      assignedHall: hall,
+      role: "student",
+      lastSubmissionTime: null
+    });
+    await user.updateProfile({ displayName: name });
+    await user.sendEmailVerification();
+    return user;
+  }
+
+  function showLoginRegisterModal() {
+    const modalDiv = document.createElement('div');
+    modalDiv.className = 'modal-overlay';
+    modalDiv.innerHTML = `
+      <div class="modal-card">
+        <h2>🍽️ Student Login / Register</h2>
+        <div id="authMode" style="margin-bottom:1rem;">
+          <button id="showLoginBtn" class="small-btn">Login</button>
+          <button id="showRegisterBtn" class="small-btn">Register</button>
+        </div>
+        <div id="loginForm">
+          <div class="form-group"><label>Email</label><input type="email" id="loginEmail" placeholder="student@example.com"></div>
+          <div class="form-group"><label>Password</label><input type="password" id="loginPassword"></div>
+          <div style="text-align:right; margin-bottom:1rem;">
+            <a href="#" id="forgotPasswordLink" style="font-size:0.8rem; color:#4C6A7A;">Forgot password?</a>
+          </div>
+          <button id="doLoginBtn" class="btn btn-primary">Login</button>
+        </div>
+        <div id="registerForm" style="display:none;">
+          <div class="form-group"><label>Full Name</label><input type="text" id="regName"></div>
+          <div class="form-group"><label>Student Number</label><input type="text" id="regStudentNumber" placeholder="G24T4891"></div>
+          <div class="form-group"><label>Your Dining Hall</label><select id="regHall">${HALLS.map(h => `<option value="${h}">${h}</option>`).join('')}</select></div>
+          <div class="form-group"><label>Email (used to login)</label><input type="email" id="regEmail"></div>
+          <div class="form-group"><label>Password</label><input type="password" id="regPassword"></div>
+          <button id="doRegisterBtn" class="btn btn-primary">Register</button>
+        </div>
+        <div id="authError" class="alert" style="display:none;"></div>
+        <div id="authSuccess" class="alert" style="display:none; background:#E8F0EA;"></div>
+      </div>
+    `;
+    document.body.appendChild(modalDiv);
+
+    const showLogin = () => { document.getElementById("loginForm").style.display = "block"; document.getElementById("registerForm").style.display = "none"; };
+    const showRegister = () => { document.getElementById("loginForm").style.display = "none"; document.getElementById("registerForm").style.display = "block"; };
+    document.getElementById("showLoginBtn").onclick = showLogin;
+    document.getElementById("showRegisterBtn").onclick = showRegister;
+
+    document.getElementById("doLoginBtn").onclick = async () => {
+      const email = document.getElementById("loginEmail").value;
+      const pwd = document.getElementById("loginPassword").value;
+      try {
+        await auth.signInWithEmailAndPassword(email, pwd);
+        modalDiv.remove();
+      } catch (err) { document.getElementById("authError").innerText = err.message; document.getElementById("authError").style.display = "block"; }
+    };
+
+    document.getElementById("doRegisterBtn").onclick = async () => {
+      const name = document.getElementById("regName").value.trim();
+      const studentNumber = document.getElementById("regStudentNumber").value.trim().toUpperCase();
+      const hall = document.getElementById("regHall").value;
+      const email = document.getElementById("regEmail").value;
+      const password = document.getElementById("regPassword").value;
+      if (!name || !studentNumber || !hall || !email || !password) {
+        document.getElementById("authError").innerText = "All fields required.";
+        document.getElementById("authError").style.display = "block";
+        return;
+      }
+      try {
+        await registerStudent(email, password, name, studentNumber, hall);
+        document.getElementById("authError").style.display = "none";
+        document.getElementById("authSuccess").innerText = "✅ Registration successful! A verification email has been sent. Please check your inbox and click the link to activate your account.";
+        document.getElementById("authSuccess").style.display = "block";
+        document.getElementById("doRegisterBtn").disabled = true;
+        document.getElementById("doRegisterBtn").innerHTML = "✅ Please verify your email";
+      } catch (err) {
+        document.getElementById("authError").innerText = err.message;
+        document.getElementById("authError").style.display = "block";
+      }
+    };
+
+    document.getElementById("forgotPasswordLink")?.addEventListener("click", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("loginEmail").value;
+      if (!email) {
+        document.getElementById("authError").innerText = "Please enter your email address first.";
+        document.getElementById("authError").style.display = "block";
+        return;
+      }
+      try {
+        await auth.sendPasswordResetEmail(email);
+        document.getElementById("authSuccess").innerText = "✅ Password reset email sent! Check your inbox.";
+        document.getElementById("authSuccess").style.display = "block";
+        document.getElementById("authError").style.display = "none";
+      } catch (err) {
+        document.getElementById("authError").innerText = err.message;
+        document.getElementById("authError").style.display = "block";
+      }
+    });
+
+    showLogin();
+  }
+
+  async function updateUserDisplay() {
+    const container = document.getElementById("userInfoDisplay");
+    if (currentUser) {
+      let name = currentUser.displayName || "Student";
+      let profileDoc = await usersCollection.doc(currentUser.uid).get();
+      if (profileDoc.exists) {
+        userProfile = profileDoc.data();
+        name = userProfile.name;
+      }
+      container.innerHTML = `
+        <i class="fas fa-user-circle"></i> ${escapeHtml(name)}
+        <button id="logoutBtn" class="logout-btn">Logout</button>
+        <button id="deleteAccountBtn" class="delete-account-btn">🗑️ Delete Account</button>
+      `;
+      document.getElementById("logoutBtn").onclick = async () => { await auth.signOut(); };
+      document.getElementById("deleteAccountBtn").onclick = deleteUserAccount;
+    } else {
+      container.innerHTML = '<span>👤 Not logged in</span>';
+    }
+  }
+
+  // ----------------------------- SUBMIT & TRACK -----------------------------
+  async function handleSubmit() {
+    if (!currentUser) { alert("Please login first."); showLoginRegisterModal(); return; }
+    if (!currentUser.emailVerified) {
+      alert("Please verify your email before submitting. Check your inbox.");
       return;
     }
-    if (currentHall !== currentUser.assignedHall) {
-      alert(`⚠️ You can only submit feedback to your own dining hall (${currentUser.assignedHall}).\nYou are currently viewing ${currentHall}. Please switch to your hall or use the correct hall.`);
+    if (currentHall !== userProfile?.assignedHall) {
+      alert(`⚠️ You can only submit to your own hall: ${userProfile?.assignedHall}.`);
+      return;
+    }
+    const allowed = await canSubmit(currentUser.uid);
+    if (!allowed) {
+      document.getElementById("submitMsg").innerHTML = '<div class="alert">⏳ Please wait 30 seconds between submissions.</div>';
+      setTimeout(() => document.getElementById("submitMsg").innerHTML = "", 3000);
       return;
     }
     const type = document.getElementById("feedbackType").value;
     const title = document.getElementById("titleInput").value;
     const desc = document.getElementById("descInput").value.trim();
     const msgDiv = document.getElementById("submitMsg");
-    if (desc.length < 3) {
-      msgDiv.innerHTML = '<div class="alert">⚠️ Description must be at least 3 characters.</div>';
-      return;
+    if (desc.length < 3) { msgDiv.innerHTML = '<div class="alert">⚠️ Description too short.</div>'; return; }
+    try {
+      const newId = await addSubmission(currentHall, type, title, desc);
+      await usersCollection.doc(currentUser.uid).update({ lastSubmissionTime: firebase.firestore.FieldValue.serverTimestamp() });
+      document.getElementById("titleInput").value = "";
+      document.getElementById("descInput").value = "";
+      msgDiv.innerHTML = `<div class="alert" style="background:#E8F0EA;">✅ Submitted! Your ID: <strong>${newId}</strong> (see "My Submissions")</div>`;
+      setTimeout(() => msgDiv.innerHTML = "", 4000);
+      loadFeedFirstPage(document.getElementById("feedHallFilter")?.value || "all", document.getElementById("feedSearchInput")?.value || "");
+    } catch (err) {
+      msgDiv.innerHTML = `<div class="alert">❌ Error: ${err.message}</div>`;
     }
-    const newId = addSubmission(currentHall, type, title, desc);
-    document.getElementById("titleInput").value = "";
-    document.getElementById("descInput").value = "";
-    msgDiv.innerHTML = `<div class="alert" style="background:#E8F0EA;">✅ Submitted! Your ID: <strong>${newId}</strong>. Use "Track" tab to see updates & replies.</div>`;
-    setTimeout(() => msgDiv.innerHTML = "", 5000);
-    renderCommunityFeed();
-    if (currentAdmin.loggedIn) renderAdminDashboard();
   }
 
-  function checkStatus() {
+  async function checkStatus() {
     const id = document.getElementById("trackingId").value.trim();
     const resultDiv = document.getElementById("trackResult");
     if (!id) { resultDiv.innerHTML = '<div class="alert">Enter an ID.</div>'; return; }
-    const sub = getSubmissionById(id);
-    if (!sub) { resultDiv.innerHTML = '<div class="alert">❌ ID not found.</div>'; return; }
-    let replyHtml = sub.adminResponse ? `<div class="reply-text"><i class="fas fa-reply"></i> <strong>Staff reply:</strong><br>${escapeHtml(sub.adminResponse)}</div>` : '<div class="alert">💬 No reply yet. Check back later.</div>';
-    resultDiv.innerHTML = `<div style="background:#F9EFE0; border-radius:1rem; padding:1rem;"><p><strong>ID:</strong> ${sub.id}</p><p><strong>Hall:</strong> ${sub.hall}</p><p><strong>Type:</strong> ${sub.type}</p><p><strong>Title:</strong> ${escapeHtml(sub.title)}</p><p><strong>Description:</strong> ${escapeHtml(sub.description)}</p><p><strong>Seen by staff:</strong> ${sub.isSeen ? "✅ Yes" : "⏳ Not yet"}</p><p><strong>Responded:</strong> ${sub.isReviewed ? "✅ Yes" : "⏳ Pending"}</p>${replyHtml}</div>`;
+    const doc = await submissionsCollection.doc(id).get();
+    if (!doc.exists) { resultDiv.innerHTML = '<div class="alert">ID not found.</div>'; return; }
+    const sub = doc.data();
+    let replyHtml = sub.adminResponse ? `<div class="reply-text">Staff reply: ${escapeHtml(sub.adminResponse)}</div>` : '<div class="alert">No reply yet.</div>';
+    resultDiv.innerHTML = `<div style="background:#F9EFE0; padding:1rem; border-radius:1rem;"><p><strong>ID:</strong> ${sub.id}</p><p><strong>Hall:</strong> ${sub.hall}</p><p><strong>Type:</strong> ${sub.type}</p><p><strong>Title:</strong> ${escapeHtml(sub.title)}</p><p><strong>Description:</strong> ${escapeHtml(sub.description)}</p><p><strong>Seen:</strong> ${sub.isSeen ? "✅" : "⏳"}</p><p><strong>Responded:</strong> ${sub.isReviewed ? "✅" : "⏳"}</p>${replyHtml}</div>`;
   }
 
-  // ---------- HELPER FUNCTIONS FOR HALLS, URL ----------
+  // ----------------------------- HALL HELPERS -----------------------------
   function populateHallSelectors() {
     const selector = document.getElementById("hallSelector");
     const feedFilter = document.getElementById("feedHallFilter");
-    if (selector) {
-      selector.innerHTML = '<option value="">-- Switch hall --</option>' + HALLS.map(h => `<option value="${h}">${h}</option>`).join('');
-      selector.value = currentHall;
-    }
-    if (feedFilter) {
-      feedFilter.innerHTML = '<option value="all">All Halls</option>' + HALLS.map(h => `<option value="${h}">${h}</option>`).join('');
-    }
+    if (selector) { selector.innerHTML = '<option value="">-- Switch hall --</option>' + HALLS.map(h => `<option value="${h}">${h}</option>`).join(''); selector.value = currentHall; }
+    if (feedFilter) { feedFilter.innerHTML = '<option value="all">All Halls</option>' + HALLS.map(h => `<option value="${h}">${h}</option>`).join(''); }
   }
-
   function setCurrentHall(hall, updateUrl = true) {
     currentHall = hall;
     document.getElementById("currentHallDisplay").innerText = currentHall;
-    if (updateUrl) {
-      const url = new URL(window.location);
-      url.searchParams.set('hall', currentHall);
-      window.history.pushState({}, '', url);
-    }
+    if (updateUrl) { const url = new URL(window.location); url.searchParams.set('hall', currentHall); window.history.pushState({}, '', url); }
     populateHallSelectors();
-    const selector = document.getElementById("hallSelector");
-    if (selector) selector.value = currentHall;
+    document.getElementById("hallSelector").value = currentHall;
+    loadFeedFirstPage(document.getElementById("feedHallFilter")?.value || "all", document.getElementById("feedSearchInput")?.value || "");
   }
-
   function initHallFromUrl() {
     const params = new URLSearchParams(window.location.search);
     const hallParam = params.get('hall');
@@ -722,7 +718,7 @@
     else setCurrentHall(HALLS[0], false);
   }
 
-  // ---------- TABS & BINDINGS ----------
+  // ----------------------------- TABS & EVENT BINDINGS -----------------------------
   function initTabs() {
     const btns = document.querySelectorAll('.tab-btn');
     const contents = document.querySelectorAll('.tab-content');
@@ -733,9 +729,25 @@
         document.getElementById(tabId).classList.add('active-tab');
         btns.forEach(b => b.classList.remove('active'));
         btn.classList.add('active');
-        if (tabId === 'communityTab') renderCommunityFeed();
-        if (tabId === 'adminTab') renderAdminDashboard();
+        if (tabId === 'communityTab') {
+          const hall = document.getElementById("feedHallFilter").value;
+          const search = document.getElementById("feedSearchInput").value;
+          loadFeedFirstPage(hall, search);
+        }
+        if (tabId === 'mySubmissionsTab') listenMySubmissions();
+        if (tabId === 'adminTab' && currentAdmin.loggedIn) listenAdminPanel();
+        else if (tabId === 'adminTab') renderAdminDashboardUI([]);
       });
+    });
+  }
+
+  let unsubscribeMySubs = null;
+  function listenMySubmissions() {
+    if (unsubscribeMySubs) unsubscribeMySubs();
+    if (!currentUser) return;
+    unsubscribeMySubs = submissionsCollection.where("userId", "==", currentUser.uid).orderBy("timestamp", "desc").onSnapshot(snapshot => {
+      const subs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      renderMySubmissionsUI(subs);
     });
   }
 
@@ -746,28 +758,90 @@
       const newHall = document.getElementById("hallSelector").value;
       if (newHall && HALLS.includes(newHall)) setCurrentHall(newHall, true);
     });
-    document.getElementById("applyFeedFilter").addEventListener("click", () => renderCommunityFeed());
-    document.getElementById("feedHallFilter").addEventListener("change", () => renderCommunityFeed());
+    document.getElementById("applyFeedFilter").addEventListener("click", () => {
+      const hall = document.getElementById("feedHallFilter").value;
+      const search = document.getElementById("feedSearchInput").value;
+      loadFeedFirstPage(hall, search);
+    });
+    document.getElementById("feedHallFilter").addEventListener("change", () => {
+      const hall = document.getElementById("feedHallFilter").value;
+      const search = document.getElementById("feedSearchInput").value;
+      loadFeedFirstPage(hall, search);
+    });
+    document.getElementById("feedSearchInput").addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        const hall = document.getElementById("feedHallFilter").value;
+        const search = document.getElementById("feedSearchInput").value;
+        loadFeedFirstPage(hall, search);
+      }
+    });
   }
 
-  // ---------- INIT ----------
-  function init() {
-    // Load user from localStorage
-    const storedUser = localStorage.getItem(USER_KEY);
-    if (storedUser) {
-      currentUser = JSON.parse(storedUser);
+  // ----------------------------- AUTH STATE LISTENER -----------------------------
+  auth.onAuthStateChanged(async (user) => {
+    currentUser = user;
+    if (user) {
+      if (!user.emailVerified) {
+        await auth.signOut();
+        currentUser = null;
+        userProfile = null;
+        updateUserDisplay();
+        const modalDiv = document.createElement('div');
+        modalDiv.className = 'modal-overlay';
+        modalDiv.innerHTML = `
+          <div class="modal-card">
+            <h2>📧 Verify Your Email</h2>
+            <p>A verification link was sent to <strong>${user.email}</strong>.</p>
+            <p style="margin-top:0.5rem;">Please check your inbox and click the link to verify.</p>
+            <button id="resendVerificationBtn" class="btn btn-primary" style="margin-top:1rem;">📨 Resend Verification Email</button>
+            <button id="closeVerificationModal" class="btn" style="margin-top:0.5rem;">Close</button>
+            <div id="verifyError" class="alert" style="display:none;"></div>
+          </div>
+        `;
+        document.body.appendChild(modalDiv);
+        modalDiv.querySelector('#resendVerificationBtn').addEventListener('click', async () => {
+          try {
+            await user.sendEmailVerification();
+            document.getElementById('verifyError').innerText = "✅ Verification email resent! Check your inbox.";
+            document.getElementById('verifyError').style.display = 'block';
+            document.getElementById('verifyError').style.background = '#E8F0EA';
+          } catch (err) {
+            document.getElementById('verifyError').innerText = err.message;
+            document.getElementById('verifyError').style.display = 'block';
+          }
+        });
+        modalDiv.querySelector('#closeVerificationModal').addEventListener('click', () => {
+          modalDiv.remove();
+          showLoginRegisterModal();
+        });
+        return;
+      }
+      const doc = await usersCollection.doc(user.uid).get();
+      if (doc.exists) userProfile = doc.data();
+      else { userProfile = null; await auth.signOut(); showLoginRegisterModal(); return; }
       updateUserDisplay();
+      if (currentHall !== userProfile.assignedHall) setCurrentHall(userProfile.assignedHall, true);
+      listenMySubmissions();
+      loadFeedFirstPage(document.getElementById("feedHallFilter")?.value || "all", document.getElementById("feedSearchInput")?.value || "");
     } else {
-      showRegistrationModal();
+      currentUser = null;
+      userProfile = null;
+      updateUserDisplay();
+      showLoginRegisterModal();
     }
+  });
+
+  // ----------------------------- INIT -----------------------------
+  function init() {
     initHallFromUrl();
     populateHallSelectors();
     bindEvents();
     initTabs();
-    renderCommunityFeed();
+    loadFeedFirstPage("all", "");
   }
-
   init();
+
+  function escapeHtml(str) { if (!str) return ''; return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
 </script>
 </body>
 </html>

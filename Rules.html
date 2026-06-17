@@ -4,6 +4,14 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
   <title>Dining Hall Rules | Campus Food Guide</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+  <!-- Favicon & Icons -->
+  <link rel="icon" type="image/x-icon" href="Images/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="Images/icon-192.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="Images/apple-touch-icon.png">
+  <link rel="manifest" href="Images/site.webmanifest">
+
   <style>
     * {
       margin: 0;
@@ -13,7 +21,7 @@
     }
 
     body {
-      background-color: #F9F3E7;  /* soft beige base */
+      background-color: #F9F3E7;
       padding: 2rem 1.5rem;
       color: #2F3E46;
     }
@@ -23,9 +31,8 @@
       margin: 0 auto;
     }
 
-    /* header */
     .hero {
-      background: #D9EAF5;  /* light blue */
+      background: #D9EAF5;
       border-radius: 2rem;
       padding: 1.8rem 2rem;
       margin-bottom: 2rem;
@@ -66,11 +73,33 @@
       margin-right: auto;
     }
 
-    /* card style */
+    .nav-links {
+      margin-top: 1rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .nav-links a {
+      background: #F0E5D8;
+      padding: 0.4rem 1.2rem;
+      border-radius: 3rem;
+      text-decoration: none;
+      color: #4F3A25;
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: 0.2s;
+    }
+
+    .nav-links a:hover {
+      background: #E2D0BC;
+    }
+
     .card {
       background: #FEFBF5;
       border-radius: 1.5rem;
-      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 2px 4px rgba(0, 0, 0, 0.02);
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
       overflow: hidden;
       border: 1px solid #EADBC6;
       margin-bottom: 2rem;
@@ -95,7 +124,6 @@
       padding: 1.6rem 1.8rem;
     }
 
-    /* tables and lists */
     .hours-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -207,11 +235,29 @@
       margin: 1rem 0;
     }
 
-    footer {
+    /* Footer */
+    .app-footer {
       text-align: center;
       margin-top: 2rem;
+      font-size: 0.7rem;
       color: #B3936E;
-      font-size: 0.75rem;
+      border-top: 1px solid #E5D5C0;
+      padding-top: 1.5rem;
+    }
+
+    .app-footer a {
+      color: #4C6A7A;
+      margin: 0 0.8rem;
+      text-decoration: none;
+    }
+
+    .app-footer a:hover {
+      color: #1F3B4C;
+      text-decoration: underline;
+    }
+
+    .app-footer .footer-links {
+      margin-bottom: 0.5rem;
     }
 
     @media (max-width: 700px) {
@@ -225,10 +271,16 @@
 <div class="container">
   <div class="hero">
     <h1>
-      🍽️ Dining Hall Rules 
+      🍽️ Dining Hall Rules
       <small>reminder & etiquette</small>
     </h1>
     <div class="subhead">Respect · Courtesy · Cleanliness · Fair share</div>
+    <div class="nav-links">
+      <a href="index.html"><i class="fas fa-home"></i> Home</a>
+      <a href="about.html"><i class="fas fa-info-circle"></i> About</a>
+      <a href="privacy.html"><i class="fas fa-lock"></i> Privacy</a>
+      <a href="complaint.html"><i class="fas fa-sign-in-alt"></i> Login / Register</a>
+    </div>
   </div>
 
   <!-- OPERATING HOURS SECTION -->
@@ -320,7 +372,7 @@
     </div>
   </div>
 
-  <!-- JUICE, FRUIT & DESSERT ALLOWANCE (special combinations) -->
+  <!-- JUICE, FRUIT & DESSERT ALLOWANCE -->
   <div class="card">
     <div class="card-header">
       <h2>🍊 Juice, Fruit & Dessert Combinations</h2>
@@ -381,8 +433,15 @@
     </div>
   </div>
 
-  <footer>
-    📋 Campus Food Services — Rules subject to update. Please adhere to all guidelines to maintain a respectful dining community.
+  <footer class="app-footer">
+    <div class="footer-links">
+      <a href="index.html">🏠 Home</a>
+      <a href="about.html">About</a>
+      <a href="Rules.html">Dining Rules</a>
+      <a href="privacy.html">Privacy Policy</a>
+      <a href="complaint.html">Login / Register</a>
+    </div>
+    <span>Your privacy matters • Anonymous by design</span>
   </footer>
 </div>
 </body>
