@@ -14,7 +14,7 @@
   <!-- Android / Chrome (optional) -->
   <link rel="manifest" href="Images/site.webmanifest">
 
-  <style>
+ 
   <style>
     * {
       margin: 0;
@@ -254,9 +254,7 @@
     "Solomon Kalushi Mahlangu Hall"
   ];
 
-  function renderHallGrid() {
-    const grid = document.getElementById("hallGrid");
-    if (!grid) return;
+
   function renderHallGrid() {
     const grid = document.getElementById("hallGrid");
     if (!grid) return;
@@ -277,9 +275,7 @@
       "Solomon Kalushi Mahlangu Hall": "solomon-kalushi-mahlangu.png"
     };
 
-    grid.innerHTML = HALLS.map(hall => {
-      const imageFile = imageMap[hall] || "default.jpg";
-      const imagePath = `Images/halls/${imageFile}`;
+   
     grid.innerHTML = HALLS.map(hall => {
       const imageFile = imageMap[hall] || "default.jpg";
       const imagePath = `Images/halls/${imageFile}`;
