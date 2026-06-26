@@ -18,6 +18,38 @@
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
   <style>
+    /* Install button styling – fits your light blue/beige theme */
+.install-btn {
+  background: #BED7E8;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #1A4A5F;
+  font-size: 0.85rem;
+  transition: 0.2s;
+  display: none; /* hidden by default, shown by JS when PWA is available */
+}
+
+.install-btn:hover {
+  background: #A8C9DF;
+  transform: translateY(-1px);
+}
+
+.install-btn i {
+  margin-right: 6px;
+}
+
+/* For mobile responsiveness */
+@media (max-width: 640px) {
+  .install-btn {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.8rem;
+  }
+}
+
+
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: system-ui, 'Segoe UI', 'Inter', sans-serif; }
     body { background: #F9F3E7; padding: 1.5rem; color: #2F3E46; }
     .app-container { max-width: 1300px; margin: 0 auto; }
@@ -841,7 +873,58 @@
   }
   init();
 
-  function escapeHtml(str) { if (!str) return ''; return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+ 
+ function escapeHtml(str) { if (!str) return ''; return String(str).replace(/[&<>]/g, function(m){ if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+
+ let deferredPrompt;
+
+window.addEventListener('beforeinstallprompt', (e) => {
+  // Prevent Chrome 67+ from automatically showing the prompt
+  e.preventDefault();
+  // Stash the event so it can be triggered later
+  deferredPrompt = e;
+  // Show a custom install button (create it if not exists)
+  const installBtn = document.getElementById('installAppBtn');
+  if (installBtn) {
+    installBtn.style.display = 'block';
+    installBtn.addEventListener('click', () => {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+          } else {
+            console.log('User dismissed the install prompt');
+          }
+          deferredPrompt = null;
+        });
+      }
+    });
+  }
+});
+
+// Optional: hide the button after installation
+window.addEventListener('appinstalled', () => {
+  document.getElementById('installAppBtn').style.display = 'none';
+});
+
+
 </script>
+
+
+
+
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => console.log('Service Worker registered'))
+      .catch(err => console.error('SW registration failed:', err));
+  }
+</script>
+
+<!-- PWA Service Worker & Install Prompt -->
+<script src="pwa.js"></script>
+
 </body>
 </html>

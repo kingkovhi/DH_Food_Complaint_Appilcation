@@ -12,6 +12,18 @@
   <link rel="apple-touch-icon" sizes="180x180" href="Images/apple-touch-icon.png">
   <link rel="manifest" href="Images/site.webmanifest">
 
+
+
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('/sw.js')
+      .then(() => console.log('Service Worker registered'))
+      .catch(err => console.error('SW registration failed:', err));
+  }
+</script>
+
+
+
   <style>
     * {
       margin: 0;
@@ -19,7 +31,36 @@
       box-sizing: border-box;
       font-family: system-ui, 'Segoe UI', 'Inter', -apple-system, sans-serif;
     }
+      /* Install button styling – fits your light blue/beige theme */
+.install-btn {
+  background: #BED7E8;
+  border: none;
+  padding: 0.4rem 1rem;
+  border-radius: 2rem;
+  font-weight: 600;
+  cursor: pointer;
+  color: #1A4A5F;
+  font-size: 0.85rem;
+  transition: 0.2s;
+  display: none; /* hidden by default, shown by JS when PWA is available */
+}
 
+.install-btn:hover {
+  background: #A8C9DF;
+  transform: translateY(-1px);
+}
+
+.install-btn i {
+  margin-right: 6px;
+}
+
+/* For mobile responsiveness */
+@media (max-width: 640px) {
+  .install-btn {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.8rem;
+  }
+}
     body {
       background: #F9F3E7;
       padding: 2rem 1.5rem;
@@ -280,5 +321,9 @@
     <span>Your privacy matters • We are transparent about how we handle your data.</span>
   </footer>
 </div>
+
+<!-- PWA Service Worker & Install Prompt -->
+<script src="pwa.js"></script>
+
 </body>
 </html>

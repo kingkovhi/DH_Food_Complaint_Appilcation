@@ -1,1 +1,13 @@
-{"name":"","short_name":"","icons":[{"src":"/android-chrome-192x192.png","sizes":"192x192","type":"image/png"},{"src":"/android-chrome-512x512.png","sizes":"512x512","type":"image/png"}],"theme_color":"#ffffff","background_color":"#ffffff","display":"standalone"}
+{
+  "name": "Campus Food Voice",
+  "short_name": "FoodVoice",
+  "description": "Anonymous dining hall feedback for students",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#F9F3E7",
+  "theme_color": "#D9EAF5",
+  "icons": [
+    { "src": "/Images/icon-192.png", "type": "image/png", "sizes": "192x192" },
+    { "src": "/Images/icon-512.png", "type": "image/png", "sizes": "512x512" }
+  ]
+}
