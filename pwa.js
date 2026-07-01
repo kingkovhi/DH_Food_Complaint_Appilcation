@@ -1,6 +1,5 @@
 // ============================================================
 // pwa.js – Progressive Web App setup for Campus Food Voice
-// Handles service worker registration + install prompt
 // ============================================================
 
 // ---------- 1. REGISTER SERVICE WORKER ----------
@@ -17,23 +16,16 @@ if ('serviceWorker' in navigator) {
   });
 }
 
-// ---------- 2. INSTALL PROMPT (custom install button) ----------
-let deferredPrompt = null;
+// ---------- 2. INSTALL PROMPT ----------
+let installPromptEvent = null;
 let installButton = null;
 
-// Listen for the beforeinstallprompt event (Chrome/Edge)
 window.addEventListener('beforeinstallprompt', (event) => {
-  // Prevent the default mini-infobar from appearing on mobile
   event.preventDefault();
-  
-  // Stash the event so it can be triggered later
-  deferredPrompt = event;
-  
-  // Create or show the install button
+  installPromptEvent = event;
   createInstallButton();
 });
 
-// Create the install button dynamically if it doesn't exist
 function createInstallButton() {
   // Check if button already exists
   if (document.getElementById('installAppBtn')) {
@@ -41,7 +33,6 @@ function createInstallButton() {
     return;
   }
   
-  // Create the button
   installButton = document.createElement('button');
   installButton.id = 'installAppBtn';
   installButton.className = 'install-btn';
@@ -59,7 +50,6 @@ function createInstallButton() {
     transition: 0.2s;
   `;
   
-  // Add hover effect
   installButton.addEventListener('mouseenter', () => {
     installButton.style.background = '#A8C9DF';
   });
@@ -67,70 +57,47 @@ function createInstallButton() {
     installButton.style.background = '#BED7E8';
   });
   
-  // Find a suitable place to insert the button
-  // Option 1: Append to the top bar (right side)
+  // Append to top bar
   const topBar = document.querySelector('.top-bar > div:last-child') || document.querySelector('.top-bar');
   if (topBar) {
     topBar.appendChild(installButton);
   } else {
-    // Fallback: append to body
     document.body.appendChild(installButton);
   }
   
-  // Show the button
   installButton.style.display = 'inline-block';
-  
-  // Attach click handler
   installButton.addEventListener('click', handleInstallClick);
 }
 
-// Handle install button click
 async function handleInstallClick() {
-  if (!deferredPrompt) {
-    console.log('No install prompt available. Try opening in Chrome or Edge.');
+  if (!installPromptEvent) {
+    console.log('No install prompt available.');
     return;
   }
-  
-  // Show the install prompt
-  deferredPrompt.prompt();
-  
-  // Wait for the user's response
-  const choiceResult = await deferredPrompt.userChoice;
-  
+  installPromptEvent.prompt();
+  const choiceResult = await installPromptEvent.userChoice;
   if (choiceResult.outcome === 'accepted') {
-    console.log('✅ User accepted the install prompt');
-    // Hide the button after successful installation
-    const btn = document.getElementById('installAppBtn');
-    if (btn) btn.style.display = 'none';
+    console.log('✅ User accepted install');
+    document.getElementById('installAppBtn').style.display = 'none';
   } else {
-    console.log('❌ User dismissed the install prompt');
+    console.log('❌ User dismissed install');
   }
-  
-  // Clear the deferred prompt (it can only be used once)
-  deferredPrompt = null;
+  installPromptEvent = null;
 }
 
-// ---------- 3. APP INSTALLED EVENT ----------
 window.addEventListener('appinstalled', () => {
   console.log('✅ App installed successfully!');
-  // Hide the install button if it exists
   const btn = document.getElementById('installAppBtn');
   if (btn) btn.style.display = 'none';
-  
-  // Optional: Show a thank you message
-  // You could show a toast or alert here
 });
 
-// ---------- 4. DETECT STANDALONE MODE (launched from home screen) ----------
-// This helps identify if the user is using the installed app
 function isInStandaloneMode() {
   return window.matchMedia('(display-mode: standalone)').matches || 
          window.navigator.standalone === true;
 }
 
-// Log if the app is running in standalone mode
 if (isInStandaloneMode()) {
-  console.log('📱 App is running in standalone mode (launched from home screen)');
+  console.log('📱 App running in standalone mode');
 } else {
-  console.log('🌐 App is running in browser mode');
+  console.log('🌐 App running in browser mode');
 }
